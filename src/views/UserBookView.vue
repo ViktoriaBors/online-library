@@ -43,16 +43,38 @@
 
     <div     
     v-if="result.length > 0 "
-    class="m-4">
+    class="flex flex-row justify-center m-4">
     <base-table
     :headline="headline"
     :data="result"
-    :actionLabel="'Request Issue'"
-    :showActionLabel="false"
     @click="bookRequest">
     </base-table>
+    <table class="text-sm text-left text-gray-800 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase lg:h-14 bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                      Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="h-8 bg-white border-b md:h-14 dark:bg-gray-900 dark:border-gray-700"
+                    v-for="data in result"
+                    :key="data.id"
+                >
+                    <td class="px-6">
+                        <button
+                        :data-bookId ="data.id"
+                        @click="bookRequest"
+                        class="block text-sm leading-tight text-teal-800 uppercase md:text-md">
+                      {{ data.available === 'Available' ? 'Request' : '-' }}
+                      </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-    </template>
+</template>
     
     <script setup>
 import commonNavbar from "@/components/common/common-navbar.vue";
@@ -63,7 +85,7 @@ import baseSelect from "@/components/common/base-select.vue";
 import baseTable from "@/components/common/base-table.vue";
 import { ref, reactive, onMounted } from "vue";
 
-const headline = ['Book Id','Book Title', 'Author', 'Category', 'Language', 'Available', 'Actions']
+const headline = ['Book Id','Book Title', 'Author', 'Category', 'Language', 'Available']
 let search = ref(undefined);
 let chosenCategory = ref(undefined)
 let available = ref(false)
@@ -99,7 +121,7 @@ const searchBook = (() => {
             author:element.brand,
             category: element.category,
             language: element.brand,
-            available: Math.random()*2 > 1 ? 'Available' : 'Not Available'
+            available: Math.random()*2 > 1 ? 'Available' : 'N/A'
         }
         result.value.push(one) 
     });

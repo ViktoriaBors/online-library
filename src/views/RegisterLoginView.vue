@@ -149,6 +149,7 @@ let isRegisterOpen = ref(false);
 let loginEmail = ref(undefined);
 let loginPassword = ref(undefined);
 let registerEmail = ref(undefined);
+let registerPassword = ref(undefined);
 let firstName = ref(undefined);
 let lastName = ref(undefined);
 let postalCode = ref(undefined);
