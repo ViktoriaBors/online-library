@@ -1,13 +1,7 @@
 <template>
-  <component
-    :is="type"
-    :to="to"
-    :href="href"
-    :disabled="disabled"
+  <component :is="type" :to="to" :href="href" :disabled="disabled"
     class="inline-block px-6 py-2 text-xs font-bold leading-tight text-white uppercase transition duration-150 ease-in-out bg-teal-700 border-2 border-gray-400 rounded shadow-md btn hover:bg-teal-600 hover:shadow-lg active:bg-teal-700 active:shadow-lg focus:outline-none focus:ring-0"
-    :class="class"
-    v-on="computedListeners"
-  >
+    :class="class" v-on="computedListeners">
     <slot />
   </component>
 </template>
