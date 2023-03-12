@@ -114,7 +114,9 @@ const searchBook = () => {
     "http://localhost/api/collection?category=" +
       chosenCategory.value +
       "&language=" +
-      chosenLanguage.value,
+      chosenLanguage.value +
+      "&search=" +
+      search.value,
     {}
   )
     .then((response) => {

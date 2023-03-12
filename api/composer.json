@@ -1,0 +1,18 @@
+{
+    "name": "viki/api",
+    "description": "online-library-api",
+    "autoload": {
+        "psr-4": {
+            "Viki\\Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Viktoria Bors-Pajuste",
+            "email": "viktoria.pajuste@gmail.com"
+        }
+    ],
+    "require": {
+        "nikic/fast-route": "^1.3"
+    }
+}
