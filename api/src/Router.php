@@ -4,14 +4,31 @@ require 'vendor/autoload.php';
 
 use Viki\Api;
 
+
+// Allow from any origin
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    header("Access-Control-Allow-Origin: *");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');  // cache for 1 day
+    header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');  
+}
+
+
+// Access-Control headers are received during OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD']))
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE, PUT");
+
+    if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']))
+        header("Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}");
+
+}
+
 $dispatcher = \FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/api/collection', "Viki\Api\Controllers\BooksController::getBookCollection");
     $r->addRoute('GET', '/api/categories', "Viki\Api\Controllers\CategoriesController::getAllCategories");
     $r->addRoute('GET', '/api/languages', "Viki\Api\Controllers\LanguagesController::getAllLanguages");
-    // {id} must be a number (\d+)
-    // The /{title} suffix is optional
-    // $r->addRoute('GET', '/articles/{id:\d+}[/{title}]', 'get_article_handler');
-    // $r->addRoute('GET', '/test', "App\Controllers\Products::getAll");
+    $r->addRoute('POST', '/api/register', "Viki\Api\Controllers\UsersController::registerNewUser");
 });
 
 // Fetch method and URI from somewhere
@@ -27,7 +44,6 @@ if ($pos !== false) {
 }
 
 $uri = rawurldecode($uri);
-
 
 $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
@@ -56,59 +72,11 @@ switch ($routeInfo[0]) {
                 $response = $handler();
                 header('Content-Type: application/json');
                 echo json_encode($response);
-        }
-        // ... call $handler with $vars
+        } else if ($handler === "Viki\Api\Controllers\UsersController::registerNewUser"){
+            $requestBody = file_get_contents('php://input');
+            $data = json_decode($requestBody, true);
+            $handler($data);
+        };
         break;
 }
-
-
-
-
-
-/*
-class Router {
-
-    private $query_string;
-    private $parts;
-
-    public function __construct()
-    {
-       $this->query_string = $_SERVER['REQUEST_URI'];
-       $this->parts = explode("/", $this->query_string);
-
-    $controller = "Viki\\Html\\Controllers\\".ucfirst($this->parts[1]);
-    if(class_exists($controller)){
-        $p= new $controller;
-        if(isset($this->parts[2])){
-                if(method_exists($p, $this->parts[2])){ 
-                    echo "van ilyen method";
-                    $result = $p->{$this->parts[2]}($this->parts[3]??null);
-            } else {
-                echo "nincs ilyen method ";
-                $id = $this->parts[2];
-                if(is_numeric($id)){
-                    $result = $p->getOneById($this->parts[2]??null);
-                } else {
-                    $result = $p->getOneBySlug($this->parts[2]??null);
-                 }
-         }
-        } else {
-            $result = $p->getAll();
-         }
-    } else {
-        if(file_exists("src/Views/".$this->parts[1]."html")){
-            require "src/Views/".$this->parts[1]."html";
-        } else {
-            http_response_code(404);
-            require "src/Views/404.html";
-        }
-    }
-
-        
-            
-        
-       
-}
-}
-*/
 ?>
