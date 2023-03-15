@@ -29,6 +29,8 @@ $dispatcher = \FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/api/categories', "Viki\Api\Controllers\CategoriesController::getAllCategories");
     $r->addRoute('GET', '/api/languages', "Viki\Api\Controllers\LanguagesController::getAllLanguages");
     $r->addRoute('POST', '/api/register', "Viki\Api\Controllers\UsersController::registerNewUser");
+    $r->addRoute('POST', '/api/loginUser', "Viki\Api\Controllers\UsersController::loginUser");
+    $r->addRoute('POST', '/api/activateUser', "Viki\Api\Controllers\UsersController::activateUser");
 });
 
 // Fetch method and URI from somewhere
@@ -72,11 +74,13 @@ switch ($routeInfo[0]) {
                 $response = $handler();
                 header('Content-Type: application/json');
                 echo json_encode($response);
-        } else if ($handler === "Viki\Api\Controllers\UsersController::registerNewUser"){
-            $requestBody = file_get_contents('php://input');
-            $data = json_decode($requestBody, true);
-            $handler($data);
-        };
+        } else if ($handler === "Viki\Api\Controllers\UsersController::registerNewUser"
+        || $handler === "Viki\Api\Controllers\UsersController::loginUser"
+        || $handler === "Viki\Api\Controllers\UsersController::activateUser"){
+        $requestBody = file_get_contents('php://input');
+        $data = json_decode($requestBody, true);
+        $handler($data);
+    };
         break;
 }
 ?>

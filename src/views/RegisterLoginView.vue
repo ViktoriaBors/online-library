@@ -34,8 +34,34 @@
             required
           ></base-input>
         </div>
-        <base-button :class="'mt-2'" @click="redirect">Log in</base-button>
+        <base-button :class="'my-2'" @click="loginUser">Log in</base-button>
       </form>
+      <div>
+        <p class="text-lg font-bold text-center text-red-900">
+          {{ errorLogin }}
+        </p>
+        <p class="mt-2 text-2xl font-bold leading-tight text-teal-800">
+          {{ resultLogin }}
+        </p>
+        <div
+          v-if="resultLogin"
+          class="flex flex-col items-center justify-center sm:flex-row"
+        >
+          <base-input
+            :value="activationCode"
+            :class="'w-72'"
+            :type="'text'"
+            @input="activationCode = $event"
+            @change="activationCode = $event"
+            placeholder="Activation Code"
+            aria-label="Activation Code"
+            required
+          ></base-input>
+          <base-button :class="'my-2'" @click="sendActivationCode"
+            >Send</base-button
+          >
+        </div>
+      </div>
     </section>
 
     <section class="flex flex-col items-center justify-center m-4 mt-6">
@@ -145,12 +171,12 @@
         >
       </form>
 
-      <div>
+      <div v-if="isRegisterOpen">
         <p class="text-lg font-bold text-red-900">
-          {{ error }}
+          {{ errorRegistration }}
         </p>
         <p class="mt-2 text-2xl font-bold leading-tight text-teal-800">
-          {{ result }}
+          {{ resultRegistration }}
         </p>
       </div>
     </section>
@@ -163,11 +189,18 @@ import baseButton from "@/components/common/base-button.vue";
 import baseInput from "@/components/common/base-input.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
+
+const router = useRouter();
 
 let isLoginOpen = ref(true);
 let isRegisterOpen = ref(false);
 let loginEmail = ref(undefined);
 let loginPassword = ref(undefined);
+
+let errorLogin = ref(undefined);
+let resultLogin = ref(undefined);
+let activationCode = ref(undefined);
 
 let registerEmail = ref(undefined);
 let registerPassword = ref(undefined);
@@ -177,12 +210,12 @@ let postalCode = ref(undefined);
 let city = ref(undefined);
 let address = ref(undefined);
 
-let error = ref(undefined);
-let result = ref(undefined);
+let errorRegistration = ref(undefined);
+let resultRegistration = ref(undefined);
 
 const registerNewUser = () => {
-  error.value = undefined;
-  result.value = undefined;
+  errorRegistration.value = undefined;
+  resultRegistration.value = undefined;
   if (
     !firstName.value ||
     !lastName.value ||
@@ -219,9 +252,9 @@ const registerNewUser = () => {
       })
       .then((data) => {
         if (data.result === "error") {
-          error.value = data.message;
+          errorRegistration.value = data.message;
         } else {
-          result.value = data.message;
+          resultRegistration.value = data.message;
           firstName.value = undefined;
           lastName.value = undefined;
           postalCode.value = undefined;
@@ -237,9 +270,84 @@ const registerNewUser = () => {
   }
 };
 
-const router = useRouter();
-let redirect = () => {
-  router.push({ path: "/user" });
+const loginUser = () => {
+  errorLogin.value = undefined;
+  resultLogin.value = undefined;
+  if (!loginEmail.value || !loginPassword) {
+    errorLogin.value = "Please fill up the missing field!";
+    return;
+  } else {
+    const body = {
+      email: loginEmail.value,
+      password: loginPassword.value,
+    };
+    fetch("http://localhost/api/loginUser", {
+      method: "POST",
+      cors: "no-cors",
+      // credentials:"include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.result === "error") {
+          errorLogin.value = data.message;
+        } else {
+          if (data.result === "activation") {
+            resultLogin.value = data.message;
+            return;
+          } else {
+            router.push({ path: "/user" });
+          }
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
+};
+
+const sendActivationCode = () => {
+  if (!activationCode.value) {
+    errorLogin.value = "Please fill up the missing field!";
+  } else {
+    const body = {
+      email: loginEmail.value,
+      activationCode: activationCode.value,
+    };
+    fetch("http://localhost/api/activateUser", {
+      method: "POST",
+      cors: "no-cors",
+      // credentials:"include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.result === "error") {
+          errorLogin.value = data.message;
+        } else {
+          router.push({ path: "/user" });
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
 };
 </script>
 
