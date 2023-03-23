@@ -1,5 +1,6 @@
 <?php
 namespace Viki\Api;
+use Viki\Api\Models\Sql;
 
 require 'vendor/autoload.php';
 require "src/Router.php";

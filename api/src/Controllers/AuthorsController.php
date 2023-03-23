@@ -2,37 +2,37 @@
 namespace Viki\Api\Controllers;
 
 use Viki\Api;
-use Viki\Api\Models\Categories;
+use Viki\Api\Models\Authors;
 use Viki\Api\Models\Sql;
 
-class CategoriesController extends Sql{
+class AuthorsController extends Sql{
 
-    private static $table_name = "categories";
+    private static $table_name = "languages";
     
     public static function conn(){
         return parent::conn();
     }
 
-    public static function getAllCategories() {
-        $data = Categories::getAllCategories();
+    public static function getAllAuthors() {
+        $data = Authors::getAllAuthors();
         return $data;
     }
     
 
-    public static function updateCategoryById($category) {
+    public static function updateAuthorById($author) {
 
-        $data = Categories::updateCategoryById($category);
+        $data = Authors::updateAuthorById($author);
         echo json_encode($data);
 
 }
 
-public static function getCategoryById($id) {
-    $data = Categories::getCategoryById($id);
+public static function getAuthorById($id) {
+    $data = Authors::getAuthorById($id);
     return $data;
 }
 
-    public static function addNewCategory($category) {
-        $data = Categories::addNewCategory($category);
+    public static function addNewAuthor($author) {
+        $data = Authors::addNewAuthor($author);
         echo json_encode($data);
     }
     

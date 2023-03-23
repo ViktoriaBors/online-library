@@ -15,7 +15,7 @@
         Category: {{ data.categoryName }}
       </p>
       <p class="mb-2 text-sm text-right text-black">
-        {{ data.copies > 0 ? "Available" : "Not Available" }}
+        {{ data.availability > 0 ? "Available" : "Not Available" }}
       </p>
       <p class="mt-2 mb-4 text-base text-justify text-gray-700">
         {{ data.description }}

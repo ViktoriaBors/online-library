@@ -1,5 +1,5 @@
 <?php
-namespace Viki\Api\Classes;
+namespace Viki\Api\Models;
 
 class Sanitize {
     public static function sanitizeString($string) {

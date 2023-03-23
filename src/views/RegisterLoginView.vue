@@ -190,6 +190,7 @@ import baseInput from "@/components/common/base-input.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
+import jwt_decode from "jwt-decode";
 
 const router = useRouter();
 
@@ -297,6 +298,7 @@ const loginUser = () => {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         if (data.result === "error") {
           errorLogin.value = data.message;
         } else {
@@ -304,6 +306,10 @@ const loginUser = () => {
             resultLogin.value = data.message;
             return;
           } else {
+            const token = data.token;
+            const decoded = jwt_decode(token);
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(decoded));
             router.push({ path: "/user" });
           }
         }
@@ -341,6 +347,11 @@ const sendActivationCode = () => {
         if (data.result === "error") {
           errorLogin.value = data.message;
         } else {
+          const token = data.token;
+          const decoded = jwt_decode(token);
+          console.log(data);
+          localStorage.setItem("token", token);
+          localStorage.setItem("user", JSON.stringify(decoded));
           router.push({ path: "/user" });
         }
       })

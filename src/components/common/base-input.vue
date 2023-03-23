@@ -1,17 +1,11 @@
 <template>
-  <input :type="type" class="
-        px-3
-        py-1.5
-        text-base
-        font-normal
-        text-gray-700
-        bg-white
-        border border-solid border-teal-800
-        rounded
-        transition
-        ease-in-out
-        m-0
-        focus:ring-teal-500 focus:border-teal-500" :class="class" v-bind="$props" v-on="computedListeners" />
+  <input
+    :type="type"
+    class="px-3 py-1.5 text-base font-normal text-gray-700 bg-white border border-solid border-teal-800 rounded transition ease-in-out m-0 focus:ring-teal-500 focus:border-teal-500"
+    :disabled="disabled"
+    v-bind="$props"
+    v-on="computedListeners"
+  />
 </template>
 
 <script setup>
@@ -36,8 +30,16 @@ const props = defineProps({
   },
   name: {
     type: String,
-    default: ""
-  }
+    default: "",
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  class: {
+    type: String,
+    default: "",
+  },
 });
 
 const computedListeners = computed(() => {

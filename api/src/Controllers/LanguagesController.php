@@ -1,133 +1,42 @@
 <?php
-
 namespace Viki\Api\Controllers;
 
 use Viki\Api;
-use Viki\Api\Classes\Sanitize;
+use Viki\Api\Models\Languages;
+use Viki\Api\Models\Sql;
 
-class LanguagesController{
+class LanguagesController extends Sql{
 
-    private static $table_name = "categories";
-
+    private static $table_name = "languages";
+    
     public static function conn(){
-        $sql = new Api\Sql();
-        return $conn = $sql::conn();
-    }    
-   
-    public static function getAllowedFields()
-    {
-        $result = self::conn()->query("show columns from languages");
-        $data = $result->fetch_all(MYSQLI_ASSOC);
-        $fields = [];
-
-        foreach ($data as $d) {
-            array_push($fields, $d['Field']);
-        }
-        return $fields;
+        return parent::conn();
     }
 
     public static function getAllLanguages() {
-
-        $result = self::conn()->query("select * from languages");
-        $data = $result->fetch_all(MYSQLI_ASSOC);
+        $data = Languages::getAllLanguages();
         return $data;
     }
     
-    public static function getLanguagesById($id) {
 
-        $conn = self::conn(); 
-        $stmt = $conn->prepare("select * from languages WHERE id = ? ");
-        $stmt->bind_param("i", $id);
-        $stmt->execute() ; 
-        $result = $stmt->get_result(); 
-        $data = $result->fetch_assoc();
-        
-        return $data;
+    public static function updateLanguageById($language) {
+
+        $data = Languages::updateLanguageById($language);
+        echo json_encode($data);
+
+}
+
+public static function getLanguageById($id) {
+    $data = Languages::getLanguageById($id);
+    return $data;
+}
+
+    public static function addNewLanguage($language) {
+        $data = Languages::addNewLanguage($language);
+        echo json_encode($data);
     }
     
-    public static function createUser($user) {
-
-        $allowedFields = self::getAllowedFields();
-        foreach ($user as $key => $field) {
-            if (in_array($key, $allowedFields)) {
-                $user[$key] = Sanitize::sanitizeString($user[$key]);
-            }
-        }
-        extract($user);
-
-        $conn = self::conn(); 
-        $sql = "INSERT INTO user 
-        (first_name, last_name, email_id)
-        VALUES (?, ?, ?) ;";
-
-        $stmt = $conn->prepare($sql);
-
-        $stmt->bind_param("sss", $first_name, $last_name, $email_id);
-        $bind_success = $stmt->bind_param("sss", $first_name, $last_name, $email_id);
-    
-            if ($bind_success === false) {
-                // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
-            }
-    
-            $exec_success = $stmt->execute();
-    
-            if ($exec_success === false) {
-                // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            } else {
-                return array(
-                    'first_name' => $user['first_name'],
-                    'last_name' => $user['last_name'],
-                    'email_id' => $user['email_id']
-                );
-            }
-
-        $stmt->close();
-    }
-    
-    public static function updateUser($id, $user) {
-
-            $allowedFields = self::getAllowedFields();
-            foreach ($user as $key => $field) {
-                if (in_array($key, $allowedFields)) {
-                    $user[$key] = Sanitize::sanitizeString($user[$key]);
-                }
-            }
-            extract($user);
-    
-            $conn = self::conn();
-            $sql = "UPDATE user SET
-                first_name = ?, last_name = ?, email_id = ? WHERE id = ?"; 
-            
-   
-            $stmt = $conn->prepare($sql);
-    
-            $bind_success = $stmt->bind_param("sssi",$first_name, $last_name, $email_id , $id);
-
-            if ($bind_success === false) {
-                // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
-            }
-    
-            $exec_success = $stmt->execute();
-    
-            if ($exec_success === false) {
-                // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            } else {
-                return array(
-                    'id' => $id,
-                    'first_name' => $user['first_name'],
-                    'last_name' => $user['last_name'],
-                    'email_id' => $user['email_id']
-                );
-            }
-
-        $stmt->close();
-
-    }
-    
+    ///////////////////////    
     public static function deleteUser($id) {
 
     $conn = self::conn(); 
