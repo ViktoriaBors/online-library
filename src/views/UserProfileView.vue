@@ -91,8 +91,11 @@
         >Save</base-button
       >
     </form>
-    <p class="mt-2 text-2xl font-bold leading-tight text-teal-800">
-      {{ result }}
+    <p
+      class="mt-2 text-2xl font-bold leading-tight"
+      :class="result ? ' text-teal-800' : 'text-red-900'"
+    >
+      {{ result ? result : error }}
     </p>
   </section>
 </template>
@@ -110,6 +113,7 @@ let city = ref(undefined);
 let address = ref(undefined);
 let isDisabled = ref(true);
 let result = ref(undefined);
+let error = ref(undefined);
 
 const editUser = () => {
   isDisabled.value = !isDisabled.value;
@@ -142,6 +146,16 @@ onMounted(() => {
 });
 
 const updateUser = () => {
+  if (
+    !firstName.value ||
+    !lastName.value ||
+    !postalCode.value ||
+    !city.value ||
+    !address.value
+  ) {
+    error.value = "Please fill up the missing field!";
+    return;
+  }
   const user = localStorage.getItem("user");
   const userParse = JSON.parse(user);
   const userId = userParse.sub;

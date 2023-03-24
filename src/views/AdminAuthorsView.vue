@@ -47,8 +47,11 @@
       </tbody>
     </table>
   </div>
-  <p class="my-4 text-2xl font-bold leading-tight text-center text-teal-800">
-    {{ resultMessage }}
+  <p
+    class="mt-2 text-2xl font-bold leading-tight"
+    :class="resultMessage ? 'text-teal-800' : 'text-red-900'"
+  >
+    {{ resultMessage ? resultMessage : errorMessage }}
   </p>
   <div class="max-w-md mx-2 mb-4 sm:mx-auto" v-if="!resultMessage">
     <form class="" @submit.prevent>
@@ -98,6 +101,7 @@ const headline = ["Author Id", "Author", "Status"];
 
 const result = ref([]);
 let resultMessage = ref(undefined);
+let errorMessage = ref(undefined);
 let newAuthorName = ref(undefined);
 const updateAuthorName = ref(undefined);
 let authorToChangeId = ref(undefined);
@@ -158,6 +162,10 @@ const editAuthorName = (id) => {
 };
 
 const changeAuthorName = () => {
+  if (!updateAuthorName.value) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const authorId = result.value.find((author) => {
     return author.authorId == authorToChangeId.value;
   }).authorId;
@@ -193,6 +201,10 @@ const changeAuthorName = () => {
 };
 
 const addNewAuthor = () => {
+  if (!newAuthorName.value) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const body = {
     authorName: newAuthorName.value,
   };

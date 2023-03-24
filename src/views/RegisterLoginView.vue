@@ -37,11 +37,11 @@
         <base-button :class="'my-2'" @click="loginUser">Log in</base-button>
       </form>
       <div>
-        <p class="text-lg font-bold text-center text-red-900">
-          {{ errorLogin }}
-        </p>
-        <p class="mt-2 text-2xl font-bold leading-tight text-teal-800">
-          {{ resultLogin }}
+        <p
+          class="mt-2 text-2xl font-bold leading-tight"
+          :class="resultLogin ? 'text-teal-800' : 'text-red-900'"
+        >
+          {{ resultLogin ? resultLogin : errorLogin }}
         </p>
         <div
           v-if="resultLogin"
@@ -172,11 +172,11 @@
       </form>
 
       <div v-if="isRegisterOpen">
-        <p class="text-lg font-bold text-red-900">
-          {{ errorRegistration }}
-        </p>
-        <p class="mt-2 text-2xl font-bold leading-tight text-teal-800">
-          {{ resultRegistration }}
+        <p
+          class="mt-2 text-2xl font-bold leading-tight"
+          :class="resultRegistration ? 'text-teal-800' : 'text-red-900'"
+        >
+          {{ resultRegistration ? resultRegistration : errorRegistration }}
         </p>
       </div>
     </section>

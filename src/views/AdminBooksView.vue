@@ -48,8 +48,11 @@
       </tbody>
     </table>
   </div>
-  <p class="my-4 text-2xl font-bold leading-tight text-center text-teal-800">
-    {{ resultMessage }}
+  <p
+    class="mt-2 text-2xl font-bold leading-tight"
+    :class="resultMessage ? 'text-teal-800' : 'text-red-900'"
+  >
+    {{ resultMessage ? resultMessage : errorMessage }}
   </p>
   <div class="max-w-md mx-2 mb-4 sm:mx-auto" v-if="!resultMessage">
     <form v-if="updateBook" @submit.prevent class="max-w-72">
@@ -199,6 +202,7 @@ const headline = [
 
 const result = ref([]);
 let resultMessage = ref(undefined);
+let errorMessage = ref(undefined);
 const newBook = ref(undefined);
 const updateBook = ref(undefined);
 const bookToChangeId = ref(undefined);
@@ -273,6 +277,16 @@ const editBook = (id) => {
 };
 
 const changeBookDetails = () => {
+  if (
+    !title.value ||
+    !author.value ||
+    !language.value ||
+    !category.value ||
+    !availability.value
+  ) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const bookId = result.value.find((book) => {
     return book.bookId == bookToChangeId.value;
   }).bookId;
@@ -320,7 +334,17 @@ const cancelChangeBookDetails = () => {
 };
 
 const addNewBook = () => {
-  console.log(description.value);
+  if (
+    !title.value ||
+    !author.value ||
+    !language.value ||
+    !category.value ||
+    !availability.value ||
+    !description.value
+  ) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const body = {
     title: title.value,
     author: author.value,

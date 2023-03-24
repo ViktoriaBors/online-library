@@ -47,8 +47,11 @@
       </tbody>
     </table>
   </div>
-  <p class="my-4 text-2xl font-bold leading-tight text-center text-teal-800">
-    {{ resultMessage }}
+  <p
+    class="mt-2 text-2xl font-bold leading-tight"
+    :class="resultMessage ? 'text-teal-800' : 'text-red-900'"
+  >
+    {{ resultMessage ? resultMessage : errorMessage }}
   </p>
   <div class="max-w-md mx-2 mb-4 sm:mx-auto" v-if="!resultMessage">
     <form class="" @submit.prevent>
@@ -100,6 +103,7 @@ const headline = ["Language Id", "Language", "Status"];
 
 const result = ref([]);
 let resultMessage = ref(undefined);
+let errorMessage = ref(undefined);
 let newLanguage = ref(undefined);
 let updateLanguage = ref(undefined);
 let languageToChangeId = ref(undefined);
@@ -160,6 +164,10 @@ const editLanguage = (id) => {
 };
 
 const changeLanguage = () => {
+  if (!updateLanguage.value) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const langId = result.value.find((language) => {
     return language.langId == languageToChangeId.value;
   }).langId;
@@ -196,6 +204,10 @@ const changeLanguage = () => {
 };
 
 const addNewLanguage = () => {
+  if (!newLanguage.value) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const body = {
     language: newLanguage.value,
   };

@@ -47,8 +47,11 @@
       </tbody>
     </table>
   </div>
-  <p class="my-4 text-2xl font-bold leading-tight text-center text-teal-800">
-    {{ resultMessage }}
+  <p
+    class="mt-2 text-2xl font-bold leading-tight"
+    :class="resultMessage ? 'text-teal-800' : 'text-red-900'"
+  >
+    {{ resultMessage ? resultMessage : errorMessage }}
   </p>
   <div class="max-w-md mx-2 mb-4 sm:mx-auto" v-if="!resultMessage">
     <form class="" @submit.prevent>
@@ -102,6 +105,7 @@ const headline = ["Category Id", "Name", "Status"];
 
 const result = ref([]);
 let resultMessage = ref(undefined);
+let errorMessage = ref(undefined);
 let newCategoryName = ref(undefined);
 const updateCategoryName = ref(undefined);
 let categoryToChangeId = ref(undefined);
@@ -162,6 +166,10 @@ const editCategoryName = (id) => {
 };
 
 const changeCategoryName = () => {
+  if (!updateCategoryName.value) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const categoryId = result.value.find((category) => {
     return category.categoryId == categoryToChangeId.value;
   }).categoryId;
@@ -197,6 +205,10 @@ const changeCategoryName = () => {
 };
 
 const addNewCategory = () => {
+  if (!newCategoryName.value) {
+    errorMessage.value = "Please fill up the missing field!";
+    return;
+  }
   const body = {
     categoryName: newCategoryName.value,
   };
