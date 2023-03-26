@@ -29,14 +29,14 @@
         >
           <td class="px-6">
             <button
-              :data-categoryId="data.authorId"
+              :data-authorId="data.authorId"
               @click="changeAuthorStatus(data.authorId)"
               class="block text-sm leading-tight text-teal-800 uppercase md:text-md"
             >
               {{ data.isActive === "Active" ? "Disable" : "Enable" }}
             </button>
             <button
-              :data-categoryId="data.authorId"
+              :data-authorId="data.authorId"
               @click="editAuthorName(data.authorId)"
               class="block text-sm leading-tight text-teal-800 uppercase md:text-md"
             >

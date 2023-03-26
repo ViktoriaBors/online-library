@@ -21,43 +21,7 @@ class BooksController extends Sql{
 
     }
     
-    public static function createNewIssue($issue) {
-        $data = Books::createNewIssue($issue);
-        echo json_encode($data);
-    }
-
-    public static function getUserHistory($query) {
-        $data = Books::getUserHistory($query);
-        return $data;
-        
-    }
-
-    public static function returnBook($issue)
-    {
-        $issueId = $issue['issueId'];
-
-        $to = "boszka88@gmail.com";
-        $subject = 'Return request';
-        $message = 'The following issue is requested to return:' . $issueId . '<br><br>';
-        $headers = 'From: boszka88@gmail.com' . "\r\n" .
-                   'Reply-To: boszka88@gmail.com' . "\r\n" .
-                   'Content-Type: text/html; charset=UTF-8' . "\r\n" .
-                   'X-Mailer: PHP/' . phpversion(); 
-     if (mail($to, $subject, $message, $headers)) {
-            $result = [
-            "result"=>"successful",
-            "message"=>"Successful registration of returning the book."
-                ];
-            echo json_encode($result);
-        } else {
-            $result = [
-                "result"=>"error",
-                "message"=>"Failed to register book return. Please try again later."
-            ];
-            echo json_encode($result);
-            }
-    }
-    
+ 
         public static function getAllBooks() {
             $data = Books::getAllBooks();
             return $data;

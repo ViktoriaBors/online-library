@@ -123,7 +123,7 @@ onMounted(() => {
   const user = localStorage.getItem("user");
   const userParse = JSON.parse(user);
   const userId = userParse.sub;
-  fetch("http://localhost/api/user/getUser/" + userId, {
+  fetch("http://localhost/api/getUser/" + userId, {
     method: "GET",
   })
     .then((response) => {

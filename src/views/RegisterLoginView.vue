@@ -38,18 +38,24 @@
       </form>
       <div>
         <p
-          class="mt-2 text-2xl font-bold leading-tight"
+          class="mt-2 font-bold leading-tight text-center text-teal-800 cursor-pointer text-md"
+          @click="forgotPassword"
+        >
+          Forgot your password? Click HERE
+        </p>
+        <p
+          class="mt-2 text-2xl font-bold leading-tight text-center"
           :class="resultLogin ? 'text-teal-800' : 'text-red-900'"
         >
           {{ resultLogin ? resultLogin : errorLogin }}
         </p>
         <div
-          v-if="resultLogin"
-          class="flex flex-col items-center justify-center sm:flex-row"
+          v-if="resultLogin || forgottenPassword"
+          class="flex flex-col items-center justify-center"
         >
           <base-input
             :value="activationCode"
-            :class="'w-72'"
+            :class="'w-72 mt-2'"
             :type="'text'"
             @input="activationCode = $event"
             @change="activationCode = $event"
@@ -57,14 +63,48 @@
             aria-label="Activation Code"
             required
           ></base-input>
-          <base-button :class="'my-2'" @click="sendActivationCode"
+          <base-input
+            v-if="forgottenPassword"
+            :value="newPassword1"
+            :class="'w-72 mt-2'"
+            :type="'password'"
+            @input="newPassword1 = $event"
+            @change="newPassword1 = $event"
+            placeholder="New Password"
+            aria-label="New Password"
+            required
+          ></base-input>
+          <base-input
+            v-if="forgottenPassword"
+            :value="newPassword2"
+            :class="'w-72  mt-2'"
+            :type="'password'"
+            @input="newPassword2 = $event"
+            @change="newPassword2 = $event"
+            placeholder="New Password"
+            aria-label="New Password"
+            required
+          ></base-input>
+          <base-button
+            :class="'my-2'"
+            @click="sendActivationCode"
+            v-if="!forgottenPassword"
             >Send</base-button
+          >
+          <base-button
+            :class="'my-2'"
+            @click="updatePassword"
+            v-if="forgottenPassword"
+            >Update password</base-button
           >
         </div>
       </div>
     </section>
 
-    <section class="flex flex-col items-center justify-center m-4 mt-6">
+    <section
+      class="flex flex-col items-center justify-center m-4 mt-6"
+      v-if="!forgottenPassword"
+    >
       <p
         class="block text-3xl font-bold leading-tight text-teal-800 uppercase cursor-pointer"
         @click="isRegisterOpen = !isRegisterOpen"
@@ -198,10 +238,14 @@ let isLoginOpen = ref(true);
 let isRegisterOpen = ref(false);
 let loginEmail = ref(undefined);
 let loginPassword = ref(undefined);
+let forgotPasswordEmail = ref(undefined);
 
 let errorLogin = ref(undefined);
 let resultLogin = ref(undefined);
 let activationCode = ref(undefined);
+let forgottenPassword = ref(false);
+let newPassword1 = ref(undefined);
+let newPassword2 = ref(undefined);
 
 let registerEmail = ref(undefined);
 let registerPassword = ref(undefined);
@@ -353,6 +397,98 @@ const sendActivationCode = () => {
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(decoded));
           router.push({ path: "/user" });
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
+};
+
+const forgotPassword = () => {
+  if (!loginEmail.value) {
+    errorLogin.value =
+      "Please fill up the email field! Click to forgotten password. ";
+  } else {
+    errorLogin.value = undefined;
+    resultLogin.value = undefined;
+    forgottenPassword.value = true;
+    forgotPasswordEmail.value = loginEmail.value;
+    const body = {
+      email: loginEmail.value,
+    };
+    fetch("http://localhost/api/forgotPassword", {
+      method: "POST",
+      cors: "no-cors",
+      // credentials:"include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.result === "error") {
+          errorLogin.value = data.message;
+        } else {
+          resultLogin.value = data.message;
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+  }
+};
+
+const updatePassword = () => {
+  errorLogin.value = undefined;
+  resultLogin.value = undefined;
+  if (
+    !activationCode.value ||
+    !newPassword1.value ||
+    !newPassword2.value ||
+    newPassword1.value !== newPassword2.value
+  ) {
+    errorLogin.value = "Password is not matching. ";
+    return;
+  } else {
+    errorLogin.value = undefined;
+    resultLogin.value = undefined;
+    const body = {
+      email: forgotPasswordEmail.value,
+      password: newPassword1.value,
+      code: activationCode.value,
+    };
+    fetch("http://localhost/api/updatePassword", {
+      method: "POST",
+      cors: "no-cors",
+      // credentials:"include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.result === "error") {
+          errorLogin.value = data.message;
+        } else {
+          resultLogin.value = data.message;
+          activationCode.value = undefined;
+          newPassword1.value = undefined;
+          newPassword2.value = undefined;
         }
       })
       .catch((error) => {

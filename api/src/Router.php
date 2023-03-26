@@ -32,18 +32,21 @@ $dispatcher = \FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) 
     $r->addRoute('GET', '/api/authors', "Viki\Api\Controllers\AuthorsController::getAllAuthors");
     $r->addRoute('POST', '/api/register', "Viki\Api\Controllers\UsersController::registerNewUser");
     $r->addRoute('POST', '/api/loginUser', "Viki\Api\Controllers\UsersController::loginUser");
+    $r->addRoute('POST', '/api/forgotPassword', "Viki\Api\Controllers\UsersController::forgotPassword");
+    $r->addRoute('POST', '/api/updatePassword', "Viki\Api\Controllers\UsersController::updateUserByEmail");
     $r->addRoute('POST', '/api/activateUser', "Viki\Api\Controllers\UsersController::activateUser");
+    $r->addRoute('GET', '/api/getUser/{id:\d+}', "Viki\Api\Controllers\UsersController::getUsersById");
     $r->addRoute('POST', '/api/loginAdmin', "Viki\Api\Controllers\UsersController::loginAdmin");
     $r->addRoute('GET', '/api/category/{id:\d+}', "Viki\Api\Controllers\CategoriesController::getCategoryById");
     $r->addRoute('GET', '/api/language/{id:\d+}', "Viki\Api\Controllers\LanguagesController::getLanguageById");
     $r->addRoute('GET', '/api/author/{id:\d+}', "Viki\Api\Controllers\AuthorsController::getAuthorById");
     $r->addRoute('GET', '/api/book/{id:\d+}', "Viki\Api\Controllers\BooksController::getBookById");
+    
 
     $r->addGroup('/api/user', function (FastRoute\RouteCollector $r) {
-        $r->addRoute('POST', '/issueBook', "Viki\Api\Controllers\BooksController::createNewIssue");
-        $r->addRoute('GET', '/userHistory', "Viki\Api\Controllers\BooksController::getUserHistory");
-        $r->addRoute('POST', '/returnBook', "Viki\Api\Controllers\BooksController::returnBook");
-        $r->addRoute('GET', '/getUser/{id:\d+}', "Viki\Api\Controllers\UsersController::getUsersById");
+        $r->addRoute('POST', '/issueBook', "Viki\Api\Controllers\IssuedBooksController::createNewIssue");
+        $r->addRoute('GET', '/userHistory', "Viki\Api\Controllers\IssuedBooksController::getUserHistory");
+        $r->addRoute('POST', '/returnBook', "Viki\Api\Controllers\IssuedBooksController::returnBook");       
         $r->addRoute('POST', '/updateUser', "Viki\Api\Controllers\UsersController::updateUserById");
     });
     $r->addGroup('/api/admin', function (FastRoute\RouteCollector $r) {
@@ -60,7 +63,15 @@ $dispatcher = \FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) 
         $r->addRoute('POST', '/bookStatus', "Viki\Api\Controllers\BooksController::updateBookById");
         $r->addRoute('POST', '/book', "Viki\Api\Controllers\BooksController::updateBookById");
         $r->addRoute('POST', '/newBook', "Viki\Api\Controllers\BooksController::addNewBook");
-       
+        $r->addRoute('GET', '/users', "Viki\Api\Controllers\UsersController::getAllUsers");
+        $r->addRoute('GET', '/user/{id:\d+}', "Viki\Api\Controllers\UsersController::getUserById");
+        $r->addRoute('POST', '/userBanStatus', "Viki\Api\Controllers\UsersController::updateUserById");
+        $r->addRoute('POST', '/userApproveStatus', "Viki\Api\Controllers\UsersController::updateUserById");
+        $r->addRoute('POST', '/changeUserRole', "Viki\Api\Controllers\UsersController::updateUserById");
+        $r->addRoute('POST', '/deleteUser', "Viki\Api\Controllers\UsersController::deleteUserById");
+        $r->addRoute('GET', '/issuedbooks', "Viki\Api\Controllers\IssuedBooksController::getAllIssuedBooks");
+        $r->addRoute('POST', '/returnBook', "Viki\Api\Controllers\IssuedBooksController::returnBookConfirm");
+        $r->addRoute('POST', '/paidFine', "Viki\Api\Controllers\IssuedBooksController::returnBookConfirm"); 
     });
 });
 
@@ -83,12 +94,20 @@ $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         // ... 404 Not Found
+        /*
         echo "not found 404";
+        header("HTTP/1.0 404 Not Found");
+        die();
+        */
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
         // ... 405 Method Not Allowed
+        /*
+        header("HTTP/1.0 405 Method Not Allowed");
         echo "not allowed 405";
+        die();
+        */
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];
@@ -97,7 +116,7 @@ switch ($routeInfo[0]) {
         // var_dump($vars);
         // var_dump($query_components);
         if($handler === "Viki\Api\Controllers\BooksController::getBookCollection"
-           || $handler === "Viki\Api\Controllers\BooksController::getUserHistory"
+           || $handler === "Viki\Api\Controllers\IssuedBooksController::getUserHistory"
            ){
             $response = $handler($query_components);
             header('Content-Type: application/json');
@@ -107,6 +126,8 @@ switch ($routeInfo[0]) {
             || $handler === "Viki\Api\Controllers\AuthorsController::getAllAuthors"
             || $handler === "Viki\Api\Controllers\UsersController::getCounts"
             || $handler === "Viki\Api\Controllers\BooksController::getAllBooks"
+            || $handler === "Viki\Api\Controllers\UsersController::getAllUsers"
+            || $handler === "Viki\Api\Controllers\IssuedBooksController::getAllIssuedBooks"
             ){
                 $response = $handler();
                 header('Content-Type: application/json');
@@ -114,8 +135,10 @@ switch ($routeInfo[0]) {
         } else if ($handler === "Viki\Api\Controllers\UsersController::registerNewUser"
             || $handler === "Viki\Api\Controllers\UsersController::loginUser"
             || $handler === "Viki\Api\Controllers\UsersController::activateUser"
-            || $handler ===  "Viki\Api\Controllers\BooksController::createNewIssue"
-            || $handler === "Viki\Api\Controllers\BooksController::returnBook"
+            || $handler ===  "Viki\Api\Controllers\UsersController::forgotPassword"
+            || $handler === "Viki\Api\Controllers\UsersController::updateUserByEmail"
+            || $handler ===  "Viki\Api\Controllers\IssuedBooksController::createNewIssue"
+            || $handler === "Viki\Api\Controllers\IssuedBooksController::returnBook"
             || $handler === "Viki\Api\Controllers\UsersController::updateUserById"
             || $handler === "Viki\Api\Controllers\UsersController::loginAdmin"
             || $handler === "Viki\Api\Controllers\CategoriesController::updateCategoryById"
@@ -126,6 +149,8 @@ switch ($routeInfo[0]) {
             || $handler === "Viki\Api\Controllers\AuthorsController::addNewAuthor"
             || $handler ===  "Viki\Api\Controllers\BooksController::updateBookById"
             || $handler ===  "Viki\Api\Controllers\BooksController::addNewBook"
+            || $handler ===  "Viki\Api\Controllers\UsersController::deleteUserById"
+            || $handler === "Viki\Api\Controllers\IssuedBooksController::returnBookConfirm"
             ){
             $requestBody = file_get_contents('php://input');
             $data = json_decode($requestBody, true);
@@ -134,12 +159,13 @@ switch ($routeInfo[0]) {
             || $handler === "Viki\Api\Controllers\CategoriesController::getCategoryById"
             || $handler === "Viki\Api\Controllers\LanguagesController::getLanguageById"
             || $handler === "Viki\Api\Controllers\AuthorsController::getAuthorById" 
-            || $handler === "Viki\Api\Controllers\BooksController::getBookById"          
+            || $handler === "Viki\Api\Controllers\BooksController::getBookById"  
+            || $handler === "Viki\Api\Controllers\UsersController::getUserById"        
         ){
             $response = $handler($vars);
             header('Content-Type: application/json');
             echo json_encode($response);
-        };
+        }
         // ... call $handler with $vars
         break;
 }

@@ -40,7 +40,7 @@ class UsersController extends Sql{
             $subject = 'Welcome to Multilingual online children library!';
             $message = 'Dear ' . $data['name'] . ',<br><br>';
             $message .= 'Welcome to Multilingual online children library! Your account has been successfully created.<br><br>';
-            $message .= 'Please use the following activation code to activate your account within the next two days: <b>' . $data['activationCode'] . '</b><br><br>';
+            $message .= 'Please use the following activation code to activate your account within 1 day: <b>' . $data['activationCode'] . '</b><br><br>';
             $message .= 'After activating your account, you can login to the website with your email and password.<br><br>';
             $message .= 'Thank you for joining us!<br>';
             $headers = 'From: boszka88@gmail.com' . "\r\n" .
@@ -70,6 +70,45 @@ class UsersController extends Sql{
             ];
             echo json_encode($result);
         }      
+    }
+
+    public static function forgotPassword($user) {
+        extract($user);
+        $userData = self::getUserByEmail($email);
+        if($userData){ // email exist
+            $data = Users::activationCode($email);
+                  // send email
+            $to = $email;
+            $subject = 'Welcome to Multilingual online children library!';
+            $message = 'Dear ' . $userData['name'] . ',<br><br>';
+            $message .= 'Please use the following code to choose a new password within 1 day: <b>' . $data['activationCode'] . '</b><br><br>';
+            $headers = 'From: boszka88@gmail.com' . "\r\n" .
+                       'Reply-To: boszka88@gmail.com' . "\r\n" .
+                       'Content-Type: text/html; charset=UTF-8' . "\r\n" .
+                       'X-Mailer: PHP/' . phpversion();
+
+            // Send email
+            if (mail($to, $subject, $message, $headers)) {
+                $result = [
+                    "result"=>"successful",
+                    "message"=>"Code has been sent to your email. Please check the spam-folder too."
+                ];
+                echo json_encode($result);
+            } else {
+                $result = [
+                    "result"=>"error",
+                    "message"=>"Failed to send activation code. Please try again later."
+                ];
+                echo json_encode($result);
+            }
+            } 
+        else { // email not registered already
+            $result = [
+                "result"=>"error",
+                "message"=>"This email is not existing in our database!"
+            ];
+            echo json_encode($result);
+        }     
     }
 
     public static function loginUser($user)
@@ -141,6 +180,12 @@ class UsersController extends Sql{
             echo json_encode($data);
     }
 
+    public static function updateUserByEmail($user) {
+        $data = Users::updateUserByEmail($user);
+        echo json_encode($data);
+}
+
+
     public static function loginAdmin($admin)
     {
         $email = $admin['email'];
@@ -179,18 +224,10 @@ class UsersController extends Sql{
         $counts = Users::getCounts();
         return $counts;
     }
-      
-///////////// 
-    public static function deleteUser($id) {
 
-    $conn = self::conn(); 
-    $stmt = $conn->prepare("DELETE FROM user WHERE id = ? ");
-    $stmt->bind_param("i", $id);
-    if ($stmt->execute()) {
-        return array('success' => true);
-    } else {
-        return array('error' => true, 'message' => 'Error deleting user');
-    }
+    public static function deleteUserById($id) {
+        $data = Users::deleteUserById($id);
+        echo json_encode($data);
 }
 
 }

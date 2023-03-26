@@ -144,18 +144,6 @@ public static function getAuthorById($id) {
         $stmt->close();
     }
 
-    //////////////
-    public static function deleteUser($id) {
-
-    $conn = self::conn(); 
-    $stmt = $conn->prepare("DELETE FROM user WHERE id = ? ");
-    $stmt->bind_param("i", $id);
-    if ($stmt->execute()) {
-        return array('success' => true);
-    } else {
-        return array('error' => true, 'message' => 'Error deleting user');
-    }
-}
 
 }
 

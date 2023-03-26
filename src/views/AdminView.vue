@@ -29,8 +29,13 @@ import { onMounted, ref } from "vue";
 
 let countResult = ref(undefined);
 let results = ref(undefined);
+let navOptions = ref(undefined);
 
 onMounted(() => {
+  const admin = localStorage.getItem("admin");
+  const adminParse = JSON.parse(admin);
+  console.log(adminParse.role);
+
   fetch("http://localhost/api/admin/counts", {
     method: "GET",
   })
