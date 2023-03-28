@@ -1,16 +1,5 @@
 <template>
-  <common-navbar
-    :to="[
-      '/admin',
-      '/admin/categories',
-      '/admin/languages',
-      '/admin/authors',
-      '/admin/books',
-      '/admin/users',
-      '/admin/issues',
-      '/logout',
-    ]"
-  ></common-navbar>
+  <common-navbar :to="navOptions"></common-navbar>
   <div class="flex flex-row justify-center m-4" v-if="!resultMessage">
     <base-table :headline="headline" :data="result"> </base-table>
     <table class="text-sm text-left text-gray-800 dark:text-gray-400">
@@ -30,16 +19,14 @@
           <td class="px-6">
             <button
               v-if="data.lateFine == 0"
-              :data-issueId="data.issueId"
-              @click="returnBook(data.issueId)"
+              @click="returnBook(data.issueId, data.user)"
               class="block text-sm leading-tight text-teal-800 uppercase md:text-md"
             >
               Return
             </button>
             <button
               v-if="data.lateFine > 0"
-              :data-issueId="data.issueId"
-              @click="paidFine(data.issueId)"
+              @click="paidFine(data.issueId, data.user)"
               class="block text-sm leading-tight text-teal-800 uppercase md:text-md"
             >
               Paid
@@ -110,13 +97,15 @@ if (adminParse.role == "sudo") {
   ];
 }
 
-const returnBook = (id) => {
+const returnBook = (id, user) => {
   const issueId = Number(id);
   const title = result.value.find((issue) => {
     return issue.issueId == issueId;
   }).title;
+  console.log(user);
   const body = {
     issueId,
+    name: user,
     title,
   };
   fetch("http://localhost/api/admin/returnBook", {
@@ -147,14 +136,15 @@ const returnBook = (id) => {
     });
 };
 
-const paidFine = (id) => {
+const paidFine = (id, user) => {
   const issueId = Number(id);
   const finePaid = true;
   const body = {
     issueId,
+    name: user,
     finePaid,
   };
-  fetch("http://localhost/api/admin/returnBook", {
+  fetch("http://localhost/api/admin/paidFine", {
     method: "POST",
     cors: "no-cors",
     // credentials:"include",

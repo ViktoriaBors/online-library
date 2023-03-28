@@ -71,7 +71,7 @@ $dispatcher = \FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) 
         $r->addRoute('POST', '/deleteUser', "Viki\Api\Controllers\UsersController::deleteUserById");
         $r->addRoute('GET', '/issuedbooks', "Viki\Api\Controllers\IssuedBooksController::getAllIssuedBooks");
         $r->addRoute('POST', '/returnBook', "Viki\Api\Controllers\IssuedBooksController::returnBookConfirm");
-        $r->addRoute('POST', '/paidFine', "Viki\Api\Controllers\IssuedBooksController::returnBookConfirm"); 
+        $r->addRoute('POST', '/paidFine', "Viki\Api\Controllers\IssuedBooksController::finePaid"); 
     });
 });
 
@@ -151,6 +151,7 @@ switch ($routeInfo[0]) {
             || $handler ===  "Viki\Api\Controllers\BooksController::addNewBook"
             || $handler ===  "Viki\Api\Controllers\UsersController::deleteUserById"
             || $handler === "Viki\Api\Controllers\IssuedBooksController::returnBookConfirm"
+            || $handler === "Viki\Api\Controllers\IssuedBooksController::finePaid"
             ){
             $requestBody = file_get_contents('php://input');
             $data = json_decode($requestBody, true);

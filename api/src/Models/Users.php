@@ -60,7 +60,40 @@ class Users extends Sql{
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
+            ];
+            return $result;
+        }
+    }
+
+    public static function getUserByName($name) {
+        $stmtError = null;
+        $conn = self::conn(); 
+        $stmt = $conn->prepare("select * from users WHERE name = ? ");
+        $stmt->bind_param("s", $name);
+        $bind_success = $stmt->bind_param("s", $name);
+        if ($bind_success === false) {
+            // bind_param failed, handle the error
+            $stmtError = $stmt->error;
+        }
+
+        $exec_success = $stmt->execute();
+
+        if ($exec_success === false) {
+            // execute failed, handle the error
+            $stmtError = $stmt->error;
+        } 
+        $stmt->execute() ; 
+        $result = $stmt->get_result(); 
+        $data = $result->fetch_assoc();
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }
@@ -91,7 +124,8 @@ class Users extends Sql{
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }
@@ -142,7 +176,8 @@ class Users extends Sql{
                 }  else {
                     $result = [
                         "result"=>"error",
-                        "message"=> 'Something went wrong'
+                        "message"=> 'Something went wrong',
+                        "error"=>  $stmtError 
                     ];
                     return $result;
                 }
@@ -175,7 +210,8 @@ class Users extends Sql{
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }
@@ -224,7 +260,8 @@ class Users extends Sql{
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }
@@ -256,7 +293,8 @@ class Users extends Sql{
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }
@@ -341,7 +379,8 @@ class Users extends Sql{
             } else {
                 $result = [
                     "result"=>"error",
-                    "message"=> 'Something went wrong'
+                    "message"=> 'Something went wrong',
+                    "error"=>  $stmtError 
                 ];
                 return $result;
             }
@@ -383,7 +422,8 @@ public static function activationCode ($userEmail){
                 } else {
                     $result = [
                         "result"=>"error",
-                        "message"=> 'Something went wrong'
+                        "message"=> 'Something went wrong',
+                        "error"=>  $stmtError 
                     ];
                     return $result;
                 }
@@ -440,7 +480,8 @@ public static function activationCode ($userEmail){
             } else {
                 $result = [
                     "result"=>"error",
-                    "message"=> 'Something went wrong'
+                    "message"=> 'Something went wrong',
+                    "error"=>  $stmtError 
                 ];
                 return $result;
             }  
@@ -474,10 +515,11 @@ public static function activationCode ($userEmail){
         ];
         return $result;
       } else {
-          $result = [
-              "result"=>"error",
-              "message"=> 'Something went wrong'
-          ];
+        $result = [
+            "result"=>"error",
+            "message"=> 'Something went wrong',
+            "error"=>  $stmtError 
+        ];
           return $result;
       }  
       

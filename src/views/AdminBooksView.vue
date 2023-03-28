@@ -1,17 +1,6 @@
 // Rename table and variable
 <template>
-  <common-navbar
-    :to="[
-      '/admin',
-      '/admin/categories',
-      '/admin/languages',
-      '/admin/authors',
-      '/admin/books',
-      '/admin/users',
-      '/admin/issues',
-      '/logout',
-    ]"
-  ></common-navbar>
+  <common-navbar :to="navOptions"></common-navbar>
   <div class="flex flex-row justify-center m-4" v-if="!resultMessage">
     <base-table :headline="headline" :data="result"> </base-table>
     <table class="text-sm text-left text-gray-800 dark:text-gray-400">
@@ -199,6 +188,31 @@ const headline = [
   "Copies",
   "Status",
 ];
+
+let navOptions = ref([
+  "/admin",
+  "/admin/categories",
+  "/admin/languages",
+  "/admin/authors",
+  "/admin/books",
+  "/admin/issues",
+  "/logout",
+]);
+
+const admin = localStorage.getItem("admin");
+const adminParse = JSON.parse(admin);
+if (adminParse.role == "sudo") {
+  navOptions.value = [
+    "/admin",
+    "/admin/categories",
+    "/admin/languages",
+    "/admin/authors",
+    "/admin/books",
+    "/admin/users",
+    "/admin/issues",
+    "/logout",
+  ];
+}
 
 const result = ref([]);
 let resultMessage = ref(undefined);

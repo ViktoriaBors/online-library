@@ -61,7 +61,10 @@ class IssuedBooksController extends Sql{
         $data = IssuedBooks::returnBookConfirm($issue);
         echo json_encode($data);
         }
-
+        public static function finePaid($issue) {
+            $data = IssuedBooks::finePaid($issue);
+            echo json_encode($data);
+            }
 
 }
 

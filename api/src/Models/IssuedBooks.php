@@ -86,6 +86,7 @@ class IssuedBooks extends Sql{
     }
     
     public static function returnBookConfirm($issue) {
+        $stmtError = null;
         $allowedFields = self::getAllowedFields();
         foreach ($issue as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -93,7 +94,7 @@ class IssuedBooks extends Sql{
             }
         }
         extract($issue);
-        
+                
         // date now $returnDate = date('Y-m-d', strtotime('+21 days'));
         $conn = self::conn(); 
         $issueData = self::getIssuedBookById($issueId);
@@ -108,86 +109,130 @@ class IssuedBooks extends Sql{
             $bind_success = $stmt->bind_param("ii", $fine, $issueId);
             if ($bind_success === false) {
                 // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
+                $stmtError = $stmt->error;
             }
     
             $exec_success = $stmt->execute();
     
             if ($exec_success === false) {
                 // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            }  else {
-                $stmt->close();
-            }
+                $stmtError = $stmt->error;
+            }  
+            $stmt->close();       
+
+            // if there is a fine - ban the user
+            $user = Users::getUserByName($issue['name']);
+           $updateUserBanStatus = array(
+                'userId' => $user['userId'],
+                'isBanned' => "Not Banned"
+            );
+            $banUser = Users::updateUserById($updateUserBanStatus);
         } 
 
-        if(isset($issue['finePaid'])){ // fine was paid after late return
-            $stmt = $conn->prepare("UPDATE issuedbooks SET lateFine = ? WHERE issueId = ? ");
-            $fine = 0;
-            $stmt->bind_param("ii", $fine, $issueId);
-            $bind_success = $stmt->bind_param("ii", $fine, $issueId);
-            if ($bind_success === false) {
-                // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
-            }
-    
-            $exec_success = $stmt->execute();
-    
-            if ($exec_success === false) {
-                // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            }  else {
-                $stmt->close();
-                $result = [
-                    "result" => "successful",
-                    "message" => "Late fine paid."
-                ];
-                return $result;
-            }
+               // set the book status to returned
+               $issueId = $issue['issueId'];
+               $title = $issue['title'];
+       
+               $stmt = $conn->prepare("UPDATE issuedbooks SET isIssued = 0, isReturned = 1 WHERE issueId = ? ");
+               $stmt->bind_param("i", $issueId);
+               $bind_success = $stmt->bind_param("i", $issueId);
+               if ($bind_success === false) {
+                   // bind_param failed, handle the error
+                   $stmtError = $stmt->error;
+               }
+       
+               $exec_success = $stmt->execute();
+       
+               if ($exec_success === false) {
+                   // execute failed, handle the error
+                   $stmtError = $stmt->error;
+               }  else {
+                   $stmt->close();
+               }
+               // start 2.statement  
+               $stmt2 = $conn->prepare("UPDATE books SET availability = availability + 1 WHERE title = ?");
+               $stmt2->bind_param("s", $title);
+               $bind_success = $stmt2->bind_param("s", $title);
+               if ($bind_success === false) {
+                   // bind_param failed, handle the error
+                   $stmtError = $stmt->error;
+               }
+       
+               $exec_success = $stmt2->execute();
+       
+               if ($exec_success === false) {
+                   // execute failed, handle the error
+                   $stmtError = $stmt->error;
+               } 
+                   $stmt2->close();
+       
+                if(!$stmtError){
+                    $result = [
+                        "result" => "successful",
+                        "message" => "Successful book return."
+                    ];
+                    return $result;
+                } else {
+                   $result = [
+                       "result"=>"error",
+                       "message"=> 'Something went wrong',
+                       "error"=>  $stmtError 
+                   ];
+                   return $result;
+                }    
+  }
+
+  public static function finePaid($issue){
+    $stmtError = null;
+    $allowedFields = self::getAllowedFields();
+    foreach ($issue as $key => $field) {
+        if (in_array($key, $allowedFields)) {
+            $issue[$key] = Sanitize::sanitizeString($issue[$key]);
         }
-
-        // in every case set the book status to returned
-        $issueId = $issue['issueId'];
-        $title = $issue['title'];
-
-        $stmt = $conn->prepare("UPDATE issuedbooks SET isIssued = 0, isReturned = 1 WHERE issueId = ? ");
-        $stmt->bind_param("i", $issueId);
-        $bind_success = $stmt->bind_param("i", $issueId);
+    }
+    extract($issue);
+    $conn = self::conn(); 
+        $stmt = $conn->prepare("UPDATE issuedbooks SET lateFine = ? WHERE issueId = ? ");
+        $fine = 0;
+        $stmt->bind_param("ii", $fine, $issueId);
+        $bind_success = $stmt->bind_param("ii", $fine, $issueId);
         if ($bind_success === false) {
             // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt->error;
+            $stmtError = $stmt->error;
         }
 
         $exec_success = $stmt->execute();
 
         if ($exec_success === false) {
             // execute failed, handle the error
-            echo "execute error: " . $stmt->error;
-        }  else {
-            $stmt->close();
-        }
-        // start 2.statement  
-        $stmt2 = $conn->prepare("UPDATE books SET availability = availability + 1 WHERE title = ?");
-        $stmt2->bind_param("s", $title);
-        $bind_success = $stmt2->bind_param("s", $title);
-        if ($bind_success === false) {
-            // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt2->error;
-        }
+            $stmtError = $stmt->error;
+        }  
+        
+        $stmt->close();
 
-        $exec_success = $stmt2->execute();
-
-        if ($exec_success === false) {
-            // execute failed, handle the error
-            echo "execute error: " . $stmt2->error;
-        } else {
-            $stmt2->close();
-        $result = [
-            "result" => "successful",
-            "message" => "Successful book return."
-        ];
-        return $result;
-    }
+        // when the fine paid - unban the user
+        $user = Users::getUserByName($issue['name']);
+        $updateUserBanStatus = array(
+             'userId' => $user['userId'],
+             'isBanned' => 'Banned'
+         );
+         $unbanUser = Users::updateUserById($updateUserBanStatus);
+        
+        if(!$stmtError){
+            $result = [
+                "result" => "successful",
+                "message" => "Late fine paid."
+            ];
+            return $result;
+        }
+        else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
+            ];
+            return $result;
+        }
   }
 
 

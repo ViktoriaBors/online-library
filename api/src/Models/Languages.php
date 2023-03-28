@@ -81,7 +81,8 @@ class Languages extends Sql{
         }  else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }   
@@ -114,7 +115,8 @@ public static function getLanguageById($id) {
     } else {
         $result = [
             "result"=>"error",
-            "message"=> 'Something went wrong'
+            "message"=> 'Something went wrong',
+            "error"=>  $stmtError 
         ];
         return $result;
     }
@@ -160,7 +162,8 @@ public static function getLanguageById($id) {
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
         }

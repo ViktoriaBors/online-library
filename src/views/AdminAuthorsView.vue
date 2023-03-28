@@ -1,16 +1,5 @@
 <template>
-  <common-navbar
-    :to="[
-      '/admin',
-      '/admin/categories',
-      '/admin/languages',
-      '/admin/authors',
-      '/admin/books',
-      '/admin/users',
-      '/admin/issues',
-      '/logout',
-    ]"
-  ></common-navbar>
+  <common-navbar :to="navOptions"></common-navbar>
   <div v-if="!resultMessage" class="flex flex-row justify-center m-4">
     <base-table :headline="headline" :data="result"> </base-table>
     <table class="text-sm text-left text-gray-800 dark:text-gray-400">

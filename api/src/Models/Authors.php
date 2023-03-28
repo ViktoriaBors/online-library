@@ -77,7 +77,8 @@ class Authors extends Sql{
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
     }
@@ -112,7 +113,8 @@ public static function getAuthorById($id) {
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
     }
@@ -159,7 +161,8 @@ public static function getAuthorById($id) {
         } else {
             $result = [
                 "result"=>"error",
-                "message"=> 'Something went wrong'
+                "message"=> 'Something went wrong',
+                "error"=>  $stmtError 
             ];
             return $result;
     }

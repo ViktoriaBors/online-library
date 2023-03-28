@@ -119,7 +119,7 @@ class UsersController extends Sql{
         if(!$data){
             $result = [
                 "result"=>"error",
-                "message"=>"Login failed."
+                "message"=>"This email is not registered yet."
             ];
             echo json_encode($result);
         } else if($data){
@@ -152,6 +152,12 @@ class UsersController extends Sql{
                     echo json_encode((array('token' => $jwtToken)));
     
                 }
+            } else {
+                $result = [
+                    "result"=>"error",
+                    "message"=>"Password does not match."
+                ];
+                echo json_encode($result);
             }
         }
     }
