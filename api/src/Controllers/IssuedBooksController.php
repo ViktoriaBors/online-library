@@ -30,11 +30,11 @@ class IssuedBooksController extends Sql{
     {
         $issueId = $issue['issueId'];
 
-        $to = "boszka88@gmail.com";
+        $to = "fromlabtoweb.projects@gmail.com";
         $subject = 'Return request';
         $message = 'The following issue is requested to return:' . $issueId . '<br><br>';
-        $headers = 'From: boszka88@gmail.com' . "\r\n" .
-                   'Reply-To: boszka88@gmail.com' . "\r\n" .
+        $headers = 'From: fromlabtoweb.projects@gmail.com' . "\r\n" .
+                   'Reply-To: fromlabtoweb.projects@gmail.com' . "\r\n" .
                    'Content-Type: text/html; charset=UTF-8' . "\r\n" .
                    'X-Mailer: PHP/' . phpversion(); 
      if (mail($to, $subject, $message, $headers)) {

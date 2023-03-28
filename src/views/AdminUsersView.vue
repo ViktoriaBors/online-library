@@ -41,7 +41,7 @@
               @click="changeUserApproveStatus(data.userId)"
               class="block text-sm leading-tight text-teal-800 uppercase md:text-md"
             >
-              {{ data.isApproved === "Approved" ? "Dispprove" : "Approve" }}
+              {{ data.isApproved === "Approved" ? "Disapprove" : "Approve" }}
             </button>
             <button
               :data-userId="data.userId"
@@ -111,6 +111,31 @@ let resultMessage = ref(undefined);
 let errorMessage = ref(undefined);
 const updateUser = ref(undefined);
 let userToChangeId = ref(undefined);
+
+let navOptions = ref([
+  "/admin",
+  "/admin/categories",
+  "/admin/languages",
+  "/admin/authors",
+  "/admin/books",
+  "/admin/issues",
+  "/logout",
+]);
+
+const admin = localStorage.getItem("admin");
+const adminParse = JSON.parse(admin);
+if (adminParse.role == "sudo") {
+  navOptions.value = [
+    "/admin",
+    "/admin/categories",
+    "/admin/languages",
+    "/admin/authors",
+    "/admin/books",
+    "/admin/users",
+    "/admin/issues",
+    "/logout",
+  ];
+}
 
 const changeUserBanStatus = (id) => {
   const userId = Number(id);

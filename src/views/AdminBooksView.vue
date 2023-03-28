@@ -54,8 +54,8 @@
   >
     {{ resultMessage ? resultMessage : errorMessage }}
   </p>
-  <div class="max-w-md mx-2 mb-4 sm:mx-auto" v-if="!resultMessage">
-    <form v-if="updateBook" @submit.prevent class="max-w-72">
+  <div class="max-w-xl mx-2 mb-4 sm:mx-auto" v-if="!resultMessage">
+    <form v-if="updateBook" @submit.prevent class="">
       <div class="grid gap-2 mb-6 md:grid-cols-2">
         <div>
           <p class="mt-2 ml-1">Book Title</p>
@@ -85,7 +85,7 @@
           </base-input>
         </div>
       </div>
-      <div class="grid gap-2 mb-6 md:grid-cols-2">
+      <div class="grid grid-cols-1 gap-2 mb-6 sm:grid-cols-3">
         <div>
           <p>Choose a category</p>
           <base-select
@@ -144,7 +144,7 @@
           </base-input>
         </div>
       </div>
-      <div class="grid gap-2 mb-6 md:grid-cols-2">
+      <div class="grid grid-cols-1 gap-2 mb-6 sm:grid-cols-3">
         <div>
           <p>Choose a category</p>
           <base-select
@@ -169,10 +169,10 @@
             @change="author = $event"
           ></base-select>
         </div>
-        <div>
-          <p>Description</p>
-          <textarea v-model="description" />
-        </div>
+      </div>
+      <div>
+        <p>Description</p>
+        <textarea rows="3" cols="30" v-model="description" />
       </div>
       <base-button @click="addNewBook()"> Save New Book </base-button>
     </form>
@@ -331,6 +331,7 @@ const cancelChangeBookDetails = () => {
   language.value = undefined;
   category.value = undefined;
   copies.value = undefined;
+  updateBook.value = undefined;
 };
 
 const addNewBook = () => {

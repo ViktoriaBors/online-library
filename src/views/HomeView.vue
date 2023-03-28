@@ -60,23 +60,26 @@
             address is an important piece of information, as the books will be
             sent to you by post (rarely personal pick up is possible).
           </p>
+          <p>
+            Once you have completed the registration process, we will send you
+            an activation code that you will be required to provide during your
+            initial login. It is important to be aware that the email containing
+            the activation code may end up in your spam folder. Additionally,
+            please note that you will have only 24 hours to activate your
+            account.
+          </p>
           <li class="font-bold">Booking a Book</li>
           <p>
             Once you've logged in, you can access your personal page where you
-            can again search for books and book it by clicking the "Book"
+            can again search for books and issue it by clicking the "Issue Book"
             button. Your booking request will be reviewed by an admin, who will
-            approve or deny the request based on availability.
-          </p>
-          <li class="font-bold">Receiving the Book</li>
-          <p>
-            If your booking request is approved, the book will be sent to you by
-            post.
+            send the book to your address.
           </p>
           <li class="font-bold">Returning the Book</li>
           <p>
             The book must be returned within 3 weeks of receiving it, or a daily
-            fine will be added to your account. Please make sure to return the
-            book in good condition.
+            fine will be added to your account (10 kr per day). Please make sure
+            to return the book in good condition.
           </p>
         </ul>
         <p class="mb-2">
@@ -88,7 +91,7 @@
         </p>
         <p class="mb-2">
           You can reach us by emailing us at
-          <span class="font-bold"> multilingualChildren@test.com</span>. Our
+          <span class="font-bold"> fromlabtoweb.projects@gmail.com</span>. Our
           friendly and knowledgeable staff will be more than happy to help you
           with any inquiries you may have.
         </p>

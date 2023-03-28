@@ -32,7 +32,7 @@ class Categories extends Sql{
     }
 
     public static function updateCategoryById($category) {
-
+        $stmtError = null;
         $allowedFields = self::getAllowedFields();
         foreach ($category as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -61,26 +61,31 @@ class Categories extends Sql{
 
         if ($bind_success === false) {
             // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt->error;
+            $stmtError = $stmt->error;
         }
 
         $exec_success = $stmt->execute();
 
         if ($exec_success === false) {
             // execute failed, handle the error
-            echo "execute error: " . $stmt->error;
+            $stmtError = $stmt->error;
+        } 
+
+        $stmt->close();
+        if(!$stmtError){
+            return $data;
         } else {
             $result = [
-                "result"=>"successful"
+                "result"=>"error",
+                "message"=> 'Something went wrong'
             ];
             return $result;
         }
 
-    $stmt->close();
-
 }
 
 public static function getCategoryById($id) {
+    $stmtError = null;
     $id= $id['id'];
     $conn = self::conn(); 
     $stmt = $conn->prepare("select * from categories WHERE categoryId = ? ");
@@ -88,24 +93,33 @@ public static function getCategoryById($id) {
     $bind_success = $stmt->bind_param("i", $id);
     if ($bind_success === false) {
         // bind_param failed, handle the error
-        echo "bind_param error: " . $stmt->error;
+        $stmtError = $stmt->error;
     }
 
     $exec_success = $stmt->execute();
 
     if ($exec_success === false) {
         // execute failed, handle the error
-        echo "execute error: " . $stmt->error;
+        $stmtError = $stmt->error;
     } 
     $stmt->execute() ; 
     $result = $stmt->get_result(); 
     $data = $result->fetch_assoc();
-    return $data;
+    $stmt->close();
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
+        }
 }
 
      
     public static function addNewCategory($category) {
-
+        $stmtError = null;
         $allowedFields = self::getAllowedFields();
         foreach ($category as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -126,24 +140,28 @@ public static function getCategoryById($id) {
     
             if ($bind_success === false) {
                 // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
+                $stmtError = $stmt->error;
             }
     
             $exec_success = $stmt->execute();
     
             if ($exec_success === false) {
                 // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            } else {
-                $result = [
-                    "result"=>"successful"
-                ];
-                return $result;
-            }
+                $stmtError = $stmt->error;
+            } 
 
-        $stmt->close();
+            $stmt->close();
+
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
     }
-
+}
 
 }
 

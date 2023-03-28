@@ -19,7 +19,7 @@
           chance to grow your network and bring happiness to children. To become
           an admin, simply write a brief letter introducing yourself and
           explaining how you can contribute to our cause. Please send your email
-          to <span class="font-bold"> multilingualChildren@test.com</span>.
+          to <span class="font-bold"> fromlabtoweb.projects@gmail.com</span>.
         </p>
         <p class="mb-4">
           We look forward to hearing from you and welcoming you to our team!

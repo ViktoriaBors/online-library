@@ -106,6 +106,31 @@ let newAuthorName = ref(undefined);
 const updateAuthorName = ref(undefined);
 let authorToChangeId = ref(undefined);
 
+let navOptions = ref([
+  "/admin",
+  "/admin/categories",
+  "/admin/languages",
+  "/admin/authors",
+  "/admin/books",
+  "/admin/issues",
+  "/logout",
+]);
+
+const admin = localStorage.getItem("admin");
+const adminParse = JSON.parse(admin);
+if (adminParse.role == "sudo") {
+  navOptions.value = [
+    "/admin",
+    "/admin/categories",
+    "/admin/languages",
+    "/admin/authors",
+    "/admin/books",
+    "/admin/users",
+    "/admin/issues",
+    "/logout",
+  ];
+}
+
 const changeAuthorStatus = (id) => {
   const authorId = Number(id);
   const status = result.value.find((book) => {

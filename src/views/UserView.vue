@@ -5,9 +5,9 @@
 
   <h1
     v-if="historyDetail.length == 0"
-    class="block m-4 text-2xl font-bold leading-tight text-teal-800 uppercase"
+    class="block m-4 text-2xl font-bold leading-tight text-center text-teal-800 uppercase"
   >
-    No History
+    No current book loans
   </h1>
   <div class="mx-4" v-if="historyDetail.length > 0">
     <h1

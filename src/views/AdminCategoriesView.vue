@@ -110,6 +110,31 @@ let newCategoryName = ref(undefined);
 const updateCategoryName = ref(undefined);
 let categoryToChangeId = ref(undefined);
 
+let navOptions = ref([
+  "/admin",
+  "/admin/categories",
+  "/admin/languages",
+  "/admin/authors",
+  "/admin/books",
+  "/admin/issues",
+  "/logout",
+]);
+
+const admin = localStorage.getItem("admin");
+const adminParse = JSON.parse(admin);
+if (adminParse.role == "sudo") {
+  navOptions.value = [
+    "/admin",
+    "/admin/categories",
+    "/admin/languages",
+    "/admin/authors",
+    "/admin/books",
+    "/admin/users",
+    "/admin/issues",
+    "/logout",
+  ];
+}
+
 const changeCategoryStatus = (id) => {
   const categoryId = Number(id);
   const status = result.value.find((book) => {

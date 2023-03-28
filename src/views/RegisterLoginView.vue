@@ -106,13 +106,13 @@
       v-if="!forgottenPassword"
     >
       <p
-        class="block text-3xl font-bold leading-tight text-teal-800 uppercase cursor-pointer"
+        class="block text-3xl font-bold leading-tight text-center text-teal-800 uppercase cursor-pointer"
         @click="isRegisterOpen = !isRegisterOpen"
       >
         Click here to Register
       </p>
       <form action="" @submit.prevent v-if="isRegisterOpen" class="max-w-72">
-        <div class="grid mb-6 md:gap-4 md:grid-cols-2">
+        <div class="grid md:mb-6 md:gap-4 md:grid-cols-2">
           <div>
             <p class="mt-1 ml-1">First name</p>
             <base-input
@@ -140,7 +140,7 @@
             </base-input>
           </div>
         </div>
-        <div class="grid mb-6 md:gap-4 md:grid-cols-3">
+        <div class="grid md:mb-6 md:gap-2 md:grid-cols-3">
           <div>
             <p class="mt-1 ml-1">Postal Code</p>
             <base-input
@@ -408,7 +408,7 @@ const sendActivationCode = () => {
 const forgotPassword = () => {
   if (!loginEmail.value) {
     errorLogin.value =
-      "Please fill up the email field! Click to forgotten password. ";
+      "Please fill up the email field! Click to 'Forgot your password'. ";
   } else {
     errorLogin.value = undefined;
     resultLogin.value = undefined;

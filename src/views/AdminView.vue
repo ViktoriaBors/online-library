@@ -1,16 +1,5 @@
 <template>
-  <common-navbar
-    :to="[
-      '/admin',
-      '/admin/categories',
-      '/admin/languages',
-      '/admin/authors',
-      '/admin/books',
-      '/admin/users',
-      '/admin/issues',
-      '/logout',
-    ]"
-  ></common-navbar>
+  <common-navbar :to="navOptions"></common-navbar>
   <section
     v-if="results"
     id="dashboard"
@@ -29,13 +18,32 @@ import { onMounted, ref } from "vue";
 
 let countResult = ref(undefined);
 let results = ref(undefined);
-let navOptions = ref(undefined);
+let navOptions = ref([
+  "/admin",
+  "/admin/categories",
+  "/admin/languages",
+  "/admin/authors",
+  "/admin/books",
+  "/admin/issues",
+  "/logout",
+]);
+
+const admin = localStorage.getItem("admin");
+const adminParse = JSON.parse(admin);
+if (adminParse.role == "sudo") {
+  navOptions.value = [
+    "/admin",
+    "/admin/categories",
+    "/admin/languages",
+    "/admin/authors",
+    "/admin/books",
+    "/admin/users",
+    "/admin/issues",
+    "/logout",
+  ];
+}
 
 onMounted(() => {
-  const admin = localStorage.getItem("admin");
-  const adminParse = JSON.parse(admin);
-  console.log(adminParse.role);
-
   fetch("http://localhost/api/admin/counts", {
     method: "GET",
   })

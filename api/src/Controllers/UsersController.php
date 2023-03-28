@@ -43,8 +43,8 @@ class UsersController extends Sql{
             $message .= 'Please use the following activation code to activate your account within 1 day: <b>' . $data['activationCode'] . '</b><br><br>';
             $message .= 'After activating your account, you can login to the website with your email and password.<br><br>';
             $message .= 'Thank you for joining us!<br>';
-            $headers = 'From: boszka88@gmail.com' . "\r\n" .
-                       'Reply-To: boszka88@gmail.com' . "\r\n" .
+            $headers = 'From:fromlabtoweb.projects@gmail.com' . "\r\n" .
+                       'Reply-To:fromlabtoweb.projects@gmail.com' . "\r\n" .
                        'Content-Type: text/html; charset=UTF-8' . "\r\n" .
                        'X-Mailer: PHP/' . phpversion();
 
@@ -58,7 +58,7 @@ class UsersController extends Sql{
             } else {
                 $result = [
                     "result"=>"error",
-                    "message"=>"Failed to send activation code. Please try again later."
+                    "message"=>"Failed to send activation code. Please contact us by email."
                 ];
                 echo json_encode($result);
             }
@@ -82,8 +82,8 @@ class UsersController extends Sql{
             $subject = 'Welcome to Multilingual online children library!';
             $message = 'Dear ' . $userData['name'] . ',<br><br>';
             $message .= 'Please use the following code to choose a new password within 1 day: <b>' . $data['activationCode'] . '</b><br><br>';
-            $headers = 'From: boszka88@gmail.com' . "\r\n" .
-                       'Reply-To: boszka88@gmail.com' . "\r\n" .
+            $headers = 'From: fromlabtoweb.projects@gmail.com' . "\r\n" .
+                       'Reply-To: fromlabtoweb.projects@gmail.com' . "\r\n" .
                        'Content-Type: text/html; charset=UTF-8' . "\r\n" .
                        'X-Mailer: PHP/' . phpversion();
 
@@ -97,7 +97,7 @@ class UsersController extends Sql{
             } else {
                 $result = [
                     "result"=>"error",
-                    "message"=>"Failed to send activation code. Please try again later."
+                    "message"=>"Failed to send activation code. Please contact us by email."
                 ];
                 echo json_encode($result);
             }
@@ -116,41 +116,43 @@ class UsersController extends Sql{
         $email = $user['email'];
         $password = $user['password'];
         $data = Users::loginUser($email);
-        if (password_verify($password, $data['password']) && $data['isBanned'] == 0) {
-            if($data['isApproved'] === 0){
-                $result = [
-                    "result"=>"activation",
-                    "message"=>"Use your activation code now"
-                ];
-                echo json_encode($result);
-            } else {
-                $result = [
-                    "result"=>"successful",
-                    "message"=>"You are logged in"
-                ];
-                // Authenticate the user and generate a JWT token
-                $userId = $data['userId'];
-                $role = $data['role'];
-                $secretKey = 'key';
-                $tokenPayload = array(
-                'role'=> $role,
-                'sub' => $userId,
-                'iat' => time(),
-                'exp' => time() + (60 * 60 * 24) // token expires in 1 day
-                );
-                $jwtToken = JWT::encode($tokenPayload, $secretKey, 'HS256');
-
-                // Send the JWT token in the response
-                header('Content-Type: application/json');
-                echo json_encode((array('token' => $jwtToken)));
-
-            }
-        } else {
+        if(!$data){
             $result = [
                 "result"=>"error",
                 "message"=>"Login failed."
             ];
             echo json_encode($result);
+        } else if($data){
+            if (password_verify($password, $data['password'])) {
+                if($data['isApproved'] === 0){
+                    $result = [
+                        "result"=>"activation",
+                        "message"=>"Use your activation code now"
+                    ];
+                    echo json_encode($result);
+                } else {
+                    $result = [
+                        "result"=>"successful",
+                        "message"=>"You are logged in"
+                    ];
+                    // Authenticate the user and generate a JWT token
+                    $userId = $data['userId'];
+                    $role = $data['role'];
+                    $secretKey = 'key';
+                    $tokenPayload = array(
+                    'role'=> $role,
+                    'sub' => $userId,
+                    'iat' => time(),
+                    'exp' => time() + (60 * 60 * 24) // token expires in 1 day
+                    );
+                    $jwtToken = JWT::encode($tokenPayload, $secretKey, 'HS256');
+    
+                    // Send the JWT token in the response
+                    header('Content-Type: application/json');
+                    echo json_encode((array('token' => $jwtToken)));
+    
+                }
+            }
         }
     }
 
@@ -191,32 +193,36 @@ class UsersController extends Sql{
         $email = $admin['email'];
         $password = $admin['password'];
         $data = Users::loginAdmin($email);
-        if (password_verify($password, $data['password']) && $data['isBanned'] == 0 && ($data['role'] === 'admin' || $data['role']=== 'sudo')) {
+        if(!$data){
+            {
                 $result = [
-                    "result"=>"successful",
-                    "message"=>"You are logged in"
+                    "result"=>"error",
+                    "message"=>"Login failed."
                 ];
-                // Authenticate the user and generate a JWT token
-                $userId = $data['userId'];
-                $role = $data['role'];
-                $secretKey = 'key';
-                $tokenPayload = array(
-                    'role'=> $role,
-                    'sub' => $userId,
-                    'iat' => time(),
-                    'exp' => time() + (60 * 60) // token expires in 1 hour
-                    );
-                $jwtToken = JWT::encode($tokenPayload, $secretKey, 'HS256');
-
-                // Send the JWT token in the response
-                header('Content-Type: application/json');
-                echo json_encode((array('token' => $jwtToken)));
-        } else {
-            $result = [
-                "result"=>"error",
-                "message"=>"Login failed."
-            ];
-            echo json_encode($result);
+                echo json_encode($result);
+            }
+        } else if($data){
+            if (password_verify($password, $data['password']) && $data['isBanned'] == 0 && ($data['role'] === 'admin' || $data['role']=== 'sudo')) {
+                    $result = [
+                        "result"=>"successful",
+                        "message"=>"You are logged in"
+                    ];
+                    // Authenticate the user and generate a JWT token
+                    $userId = $data['userId'];
+                    $role = $data['role'];
+                    $secretKey = 'key';
+                    $tokenPayload = array(
+                        'role'=> $role,
+                        'sub' => $userId,
+                        'iat' => time(),
+                        'exp' => time() + (60 * 60) // token expires in 1 hour
+                        );
+                    $jwtToken = JWT::encode($tokenPayload, $secretKey, 'HS256');
+    
+                    // Send the JWT token in the response
+                    header('Content-Type: application/json');
+                    echo json_encode((array('token' => $jwtToken)));
+            }
         }
     }
 

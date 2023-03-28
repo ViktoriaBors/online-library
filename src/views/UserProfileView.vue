@@ -34,7 +34,7 @@
           </base-input>
         </div>
       </div>
-      <div class="grid gap-6 mb-6 md:grid-cols-3">
+      <div class="grid gap-2 md:mb-6 md:grid-cols-3">
         <div>
           <p class="mt-2 ml-1">Postal Code</p>
           <base-input

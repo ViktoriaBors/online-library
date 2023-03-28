@@ -85,6 +85,31 @@ const result = ref([]);
 let resultMessage = ref(undefined);
 let errorMessage = ref(undefined);
 
+let navOptions = ref([
+  "/admin",
+  "/admin/categories",
+  "/admin/languages",
+  "/admin/authors",
+  "/admin/books",
+  "/admin/issues",
+  "/logout",
+]);
+
+const admin = localStorage.getItem("admin");
+const adminParse = JSON.parse(admin);
+if (adminParse.role == "sudo") {
+  navOptions.value = [
+    "/admin",
+    "/admin/categories",
+    "/admin/languages",
+    "/admin/authors",
+    "/admin/books",
+    "/admin/users",
+    "/admin/issues",
+    "/logout",
+  ];
+}
+
 const returnBook = (id) => {
   const issueId = Number(id);
   const title = result.value.find((issue) => {

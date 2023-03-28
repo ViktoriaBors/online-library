@@ -61,6 +61,7 @@
         >
           <td class="px-6">
             <button
+              v-if="!isBanned"
               :data-bookId="data.id"
               @click="bookRequest"
               class="block text-sm leading-tight text-teal-800 uppercase md:text-md"
@@ -104,8 +105,31 @@ let noResult = ref(false);
 let categories = ref([]);
 let languages = ref([]);
 let resultMessage = ref(undefined);
+let isBanned = ref(undefined);
 
 onMounted(() => {
+  const user = localStorage.getItem("user");
+  const userParse = JSON.parse(user);
+  const userId = userParse.sub;
+  fetch("http://localhost/api/getUser/" + userId, {
+    method: "GET",
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      isBanned.value = data.isBanned == 0 ? false : true;
+      if (isBanned.value) {
+        resultMessage.value =
+          "You cannot request books, because you are banned.";
+      }
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
   fetch("http://localhost/api/categories")
     .then((response) => {
       if (!response.ok) {

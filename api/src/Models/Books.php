@@ -50,7 +50,9 @@ class Books extends Sql{
             INNER JOIN authors ON books.author = authors.authorId
             INNER JOIN languages ON books.language = languages.langId
             WHERE books.category = $category AND books.language = $language 
-            AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')");
+            AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')
+            AND  categories.isActive = 1 AND languages.isActive = 1
+            AND authors.isActive = 1 AND books.isActive = 1");
             $data = $result->fetch_all(MYSQLI_ASSOC);
             return $data;
         } else  if($query_components[0][1] == 'undefined' && $query_components[1][1] !== 'undefined' ){
@@ -60,7 +62,9 @@ class Books extends Sql{
             INNER JOIN authors ON books.author = authors.authorId
             INNER JOIN languages ON books.language = languages.langId
             WHERE books.language = $language
-            AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')");
+            AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')
+            AND categories.isActive = 1 AND languages.isActive = 1
+            AND authors.isActive = 1 AND books.isActive = 1");
             $data = $result->fetch_all(MYSQLI_ASSOC);
             return $data;   
         } else  if($query_components[0][1] !== 'undefined' && $query_components[1][1] == 'undefined' ){
@@ -70,7 +74,9 @@ class Books extends Sql{
                 INNER JOIN authors ON books.author = authors.authorId
                 INNER JOIN languages ON books.language = languages.langId
                 WHERE books.category = $category
-                AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')");
+                AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')
+               AND categories.isActive = 1 AND languages.isActive = 1
+            AND authors.isActive = 1 AND books.isActive = 1");
                 $data = $result->fetch_all(MYSQLI_ASSOC);
                 return $data;            
         } else {
@@ -79,7 +85,9 @@ class Books extends Sql{
             INNER JOIN categories ON books.category = categories.categoryId
             INNER JOIN authors ON books.author = authors.authorId
             INNER JOIN languages ON books.language = languages.langId
-            AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')");
+            AND (books.title LIKE '$search' OR authors.authorName LIKE '$search')
+            WHERE categories.isActive = 1 AND languages.isActive = 1
+            AND authors.isActive = 1 AND books.isActive = 1");
             $data = $result->fetch_all(MYSQLI_ASSOC);
             return $data;
         }
@@ -87,6 +95,7 @@ class Books extends Sql{
     }
     
     public static function createNewIssue($issue) {
+      
         $allowedFields = self::getAllowedFields();
         foreach ($issue as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -147,7 +156,7 @@ class Books extends Sql{
     }
 
     public static function updateBookById($book) {
-
+        $stmtError = null;
         $allowedFields = self::getAllowedFields();
         foreach ($book as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -183,22 +192,27 @@ class Books extends Sql{
 
         if ($bind_success === false) {
             // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt->error;
+            $stmtError = $stmt->error;
         }
 
         $exec_success = $stmt->execute();
 
         if ($exec_success === false) {
             // execute failed, handle the error
-            echo "execute error: " . $stmt->error;
+            $stmtError = $stmt->error;
+        } 
+
+        $stmt->close();
+
+        if(!$stmtError){
+            return $data;
         } else {
             $result = [
-                "result"=>"successful"
+                "result"=>"error",
+                "message"=> 'Something went wrong'
             ];
             return $result;
-        }
-
-    $stmt->close();
+    }
 
 }
 
@@ -214,7 +228,7 @@ public static function getBookById($id) {
 }
 
 public static function addNewBook($book) {
-
+ $stmtError = null;
     $allowedFields = self::getAllowedFields();
     foreach ($book as $key => $field) {
         if (in_array($key, $allowedFields)) {
@@ -249,22 +263,26 @@ public static function addNewBook($book) {
 
         if ($bind_success === false) {
             // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt->error;
+            $stmtError = $stmt->error;
         }
 
         $exec_success = $stmt->execute();
 
         if ($exec_success === false) {
             // execute failed, handle the error
-            echo "execute error: " . $stmt->error;
+            $stmtError = $stmt->error;
+        } 
+        $stmt->close();
+
+        if(!$stmtError){
+            return $data;
         } else {
             $result = [
-                "result"=>"successful"
+                "result"=>"error",
+                "message"=> 'Something went wrong'
             ];
             return $result;
-        }
-
-    $stmt->close();
+    }
 }
 
 

@@ -28,13 +28,14 @@ class Users extends Sql{
     }
 
     public static function getAllUsers() {
-
+        $stmtError = null;
         $result = self::conn()->query("select userId, name, email, isApproved, isBanned, role from users");
         $data = $result->fetch_all(MYSQLI_ASSOC);
         return $data;
     }
     
     public static function getUsersById($id) {
+        $stmtError = null;
         $id= $id['id'];
         $conn = self::conn(); 
         $stmt = $conn->prepare("select * from users WHERE userId = ? ");
@@ -42,46 +43,62 @@ class Users extends Sql{
         $bind_success = $stmt->bind_param("i", $id);
         if ($bind_success === false) {
             // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt->error;
+            $stmtError = $stmt->error;
         }
 
         $exec_success = $stmt->execute();
 
         if ($exec_success === false) {
             // execute failed, handle the error
-            echo "execute error: " . $stmt->error;
+            $stmtError = $stmt->error;
         } 
         $stmt->execute() ; 
         $result = $stmt->get_result(); 
         $data = $result->fetch_assoc();
-        return $data;
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
+        }
     }
 
     public static function getUserByEmail($email) {
-
+        $stmtError = null;
         $conn = self::conn(); 
         $stmt = $conn->prepare("select * from users WHERE email = ? ");
         $stmt->bind_param("s", $email);
         $bind_success = $stmt->bind_param("s", $email);
         if ($bind_success === false) {
             // bind_param failed, handle the error
-            echo "bind_param error: " . $stmt->error;
+            $stmtError = $stmt->error;
         }
 
         $exec_success = $stmt->execute();
 
         if ($exec_success === false) {
             // execute failed, handle the error
-            echo "execute error: " . $stmt->error;
+            $stmtError = $stmt->error;
         } 
         $stmt->execute() ; 
         $result = $stmt->get_result(); 
         $data = $result->fetch_assoc();
-        return $data;
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
+        }
     }
     
     public static function registerNewUser($user) {
-
+        $stmtError = null;
         $allowedFields = self::getAllowedFields();
         foreach ($user as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -103,43 +120,71 @@ class Users extends Sql{
         
                 if ($bind_success === false) {
                     // bind_param failed, handle the error
-                    echo "bind_param error: " . $stmt->error;
+                    $stmtError = $stmt->error;
                 }
         
                 $exec_success = $stmt->execute();
         
                 if ($exec_success === false) {
                     // execute failed, handle the error
-                    echo "execute error: " . $stmt->error;
+                    $stmtError = $stmt->error;
                 } 
 
                 $stmt->close();
                 $activation = self::activationCode($user['email']);
-                $result = [
-                    "result"=>"successful",
-                    "activationCode"=> $activation['activationCode'],
-                    "name"=> $user['name']
-                ];
-                return $result;
+                if(!$stmtError){
+                    $result = [
+                        "result"=>"successful",
+                        "activationCode"=> $activation['activationCode'],
+                        "name"=> $user['name']
+                    ];
+                    return $result;
+                }  else {
+                    $result = [
+                        "result"=>"error",
+                        "message"=> 'Something went wrong'
+                    ];
+                    return $result;
+                }
                               
     }
 
     public static function loginUser($email)
     {
-
+        $stmtError = null;
         $conn = self::conn();
         $stmt = $conn->prepare("select * from users WHERE email = ? ");
         $stmt->bind_param("s", $email);
+        $bind_success =   $stmt->bind_param("s", $email);
+        if ($bind_success === false) {
+            // bind_param failed, handle the error
+            $stmtError = $stmt->error;
+        }
+
+        $exec_success = $stmt->execute();
+
+        if ($exec_success === false) {
+            // execute failed, handle the error
+            $stmtError = $stmt->error;
+        } 
         $stmt->execute();
         $result = $stmt->get_result();
         $data = $result->fetch_array();
-        return $data;
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
+        }
    
     }
 
     public static function activateUser($user)
     {
-
+        $stmtError = null;
         $email = $user['email'];
         $activationCode = $user['activationCode'];
 
@@ -163,30 +208,58 @@ class Users extends Sql{
 
             if ($bind_success === false) {
                 // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
+                $stmtError = $stmt->error;
             }
     
             $exec_success = $stmt->execute();
     
             if ($exec_success === false) {
                 // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
+                $stmtError = $stmt->error;
             } 
             $stmt->close();
         }
-        return $data;
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
+        }
+   
     }
 
     public static function loginAdmin($email)
     {
-
+        $stmtError = null;
         $conn = self::conn();
         $stmt = $conn->prepare("select * from users WHERE email = ? ");
         $stmt->bind_param("s", $email);
-        $stmt->execute();
+        $bind_success =  $stmt->bind_param("s", $email);
+        if ($bind_success === false) {
+            // bind_param failed, handle the error
+            $stmtError = $stmt->error;
+        }
+
+        $exec_success = $stmt->execute();
+
+        if ($exec_success === false) {
+            // execute failed, handle the error
+            $stmtError = $stmt->error;
+        } 
         $result = $stmt->get_result();
         $data = $result->fetch_array();
-        return $data;
+        if(!$stmtError){
+            return $data;
+        } else {
+            $result = [
+                "result"=>"error",
+                "message"=> 'Something went wrong'
+            ];
+            return $result;
+        }
    
     }
 
@@ -206,7 +279,7 @@ class Users extends Sql{
     }
 
     public static function updateUserById($user) {
-
+        $stmtError = null;
             $allowedFields = self::getAllowedFields();
             foreach ($user as $key => $field) {
                 if (in_array($key, $allowedFields)) {
@@ -248,26 +321,35 @@ class Users extends Sql{
     
            if ($bind_success === false) {
                 // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
+                $stmtError = $stmt->error;
             }
     
             $exec_success = $stmt->execute();
     
             if ($exec_success === false) {
                 // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            } else {
+                $stmtError = $stmt->error;
+            } 
+            
+                    $stmt->close();
+
+            if(!$stmtError){
                 $result = [
                     "result"=>"successful"
                 ];
                 return $result;
+            } else {
+                $result = [
+                    "result"=>"error",
+                    "message"=> 'Something went wrong'
+                ];
+                return $result;
             }
-
-        $stmt->close();
 
     }
 
 public static function activationCode ($userEmail){
+    $stmtError = null;
             $activationCode = str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT);
             $activationCodeHash = password_hash($activationCode, PASSWORD_DEFAULT);
             $activationExpire = date('Y-m-d', strtotime('+1 days'));
@@ -281,27 +363,36 @@ public static function activationCode ($userEmail){
         
                 if ($bind_success === false) {
                     // bind_param failed, handle the error
-                    echo "bind_param error: " . $stmt->error;
+                    $stmtError = $stmt->error;
                 }
         
                 $exec_success = $stmt->execute();
         
                 if ($exec_success === false) {
                     // execute failed, handle the error
-                    echo "execute error: " . $stmt->error;
+                    $stmtError = $stmt->error;
                 } 
 
                 $stmt->close();
-                $result = [
-                    "result"=>"successful",
-                    "activationCode"=> $activationCode
-                ];
-                return $result;                              
+                if(!$stmtError){
+                    $result = [
+                        "result"=>"successful",
+                        "activationCode"=> $activationCode
+                    ];
+                    return $result;  
+                } else {
+                    $result = [
+                        "result"=>"error",
+                        "message"=> 'Something went wrong'
+                    ];
+                    return $result;
+                }
+                             
     }
 
 
     public static function updateUserByEmail($user) {
-
+        $stmtError = null;
         $allowedFields = self::getAllowedFields();
         foreach ($user as $key => $field) {
             if (in_array($key, $allowedFields)) {
@@ -328,29 +419,37 @@ public static function activationCode ($userEmail){
     
            if ($bind_success === false) {
                 // bind_param failed, handle the error
-                echo "bind_param error: " . $stmt->error;
+                $stmtError = $stmt->error;
             }
     
             $exec_success = $stmt->execute();
     
             if ($exec_success === false) {
                 // execute failed, handle the error
-                echo "execute error: " . $stmt->error;
-            } else {
-                $result = [
+                $stmtError = $stmt->error;
+            } 
+              
+        $stmt->close();
+
+            if(!$stmtError){
+              $result = [
                     "result"=>"successful",
                     "message"=>"Password updated successfully. Login now."
                 ];
                 return $result;
-            }
-    
-        $stmt->close();
+            } else {
+                $result = [
+                    "result"=>"error",
+                    "message"=> 'Something went wrong'
+                ];
+                return $result;
+            }  
         }
 
 }
     
     public static function deleteUserById($id) {
-
+        $stmtError = null;
     $id = $id['userId'];
     $conn = self::conn(); 
     $stmt = $conn->prepare("DELETE FROM users WHERE userId = ? ");
@@ -358,22 +457,30 @@ public static function activationCode ($userEmail){
     $bind_success =  $stmt->bind_param("i", $id);
     if ($bind_success === false) {
         // bind_param failed, handle the error
-        echo "bind_param error: " . $stmt->error;
+        $stmtError = $stmt->error;
     }
 
     $exec_success = $stmt->execute();
 
     if ($exec_success === false) {
         // execute failed, handle the error
-        echo "execute error: " . $stmt->error;
-    } else {
-        $result = [
+        $stmtError = $stmt->error;
+    }
+    $stmt->close();
+
+    if(!$stmtError){
+         $result = [
             "result"=>"successful"
         ];
         return $result;
-    }
-
-        $stmt->close();
+      } else {
+          $result = [
+              "result"=>"error",
+              "message"=> 'Something went wrong'
+          ];
+          return $result;
+      }  
+      
 }
 
 }
