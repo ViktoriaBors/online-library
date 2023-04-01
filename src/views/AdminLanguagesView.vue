@@ -225,7 +225,6 @@ const addNewLanguage = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/newLanguage", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

@@ -94,7 +94,6 @@ const loginAdmin = () => {
   };
   fetch("https://fromlabtoweb.hu/api/loginAdmin", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

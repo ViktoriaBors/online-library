@@ -338,7 +338,6 @@ const loginUser = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.result === "error") {
           errorLogin.value = data.message;
         } else {
@@ -387,7 +386,6 @@ const sendActivationCode = () => {
         } else {
           const token = data.token;
           const decoded = jwt_decode(token);
-          console.log(data);
           localStorage.setItem("token", token);
           localStorage.setItem("user", JSON.stringify(decoded));
           router.push({ path: "/user" });
@@ -426,7 +424,6 @@ const forgotPassword = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.result === "error") {
           errorLogin.value = data.message;
         } else {
@@ -472,7 +469,6 @@ const updatePassword = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         if (data.result === "error") {
           errorLogin.value = data.message;
         } else {

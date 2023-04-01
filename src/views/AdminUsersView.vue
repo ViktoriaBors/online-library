@@ -9,6 +9,7 @@
       >
         <tr>
           <th scope="col" class="px-6 py-3">Actions</th>
+          <th scope="col" class="px-6 py-3">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -17,7 +18,7 @@
           v-for="data in result"
           :key="data.userId"
         >
-          <td class="">
+          <td class="pl-2">
             <button
               :data-userId="data.userId"
               @click="changeUserBanStatus(data.userId)"
@@ -32,6 +33,8 @@
             >
               {{ data.isApproved === "Approved" ? "Disapprove" : "Approve" }}
             </button>
+          </td>
+          <td>
             <button
               :data-userId="data.userId"
               @click="deleteUser(data.userId)"
@@ -137,7 +140,6 @@ const changeUserBanStatus = (id) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/userBanStatus", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -172,7 +174,6 @@ const changeUserApproveStatus = (id) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/userApproveStatus", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -203,7 +204,6 @@ const deleteUser = (id) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/deleteUser", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -255,7 +255,6 @@ const changeUserRole = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/changeUserRole", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -309,7 +308,6 @@ const addNewBook = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/newBook", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

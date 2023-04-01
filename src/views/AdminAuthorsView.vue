@@ -131,7 +131,6 @@ const changeAuthorStatus = (id) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/authorStatus", {
     method: "POST",
-    // credentials:"include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -188,7 +187,6 @@ const changeAuthorName = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/authorName", {
     method: "POST",
-    // credentials:"include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -222,7 +220,6 @@ const addNewAuthor = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/newAuthor", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

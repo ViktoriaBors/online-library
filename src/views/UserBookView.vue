@@ -216,7 +216,6 @@ let bookRequest = ($event) => {
   };
   fetch("https://fromlabtoweb.hu/api/user/issueBook", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

@@ -241,7 +241,6 @@ const changeBookStatus = (id) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/bookStatus", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -313,7 +312,6 @@ const changeBookDetails = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/book", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -368,7 +366,6 @@ const addNewBook = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/newBook", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

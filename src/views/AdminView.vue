@@ -44,7 +44,7 @@ if (adminParse.role == "sudo") {
 }
 
 onMounted(() => {
-  fetch("http://localhost/api/admin/counts", {
+  fetch("https://fromlabtoweb.hu/api/admin/counts", {
     method: "GET",
   })
     .then((response) => {

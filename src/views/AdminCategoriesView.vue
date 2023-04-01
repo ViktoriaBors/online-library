@@ -135,7 +135,6 @@ const changeCategoryStatus = (id) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/categoryStatus", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -192,7 +191,6 @@ const changeCategoryName = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/categoryName", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -226,7 +224,6 @@ const addNewCategory = () => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/newCategory", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

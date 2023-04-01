@@ -102,7 +102,6 @@ const returnBook = (id, user) => {
   const title = result.value.find((issue) => {
     return issue.issueId == issueId;
   }).title;
-  console.log(user);
   const body = {
     issueId,
     name: user,
@@ -110,7 +109,6 @@ const returnBook = (id, user) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/returnBook", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -145,7 +143,6 @@ const paidFine = (id, user) => {
   };
   fetch("https://fromlabtoweb.hu/api/admin/paidFine", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -193,7 +190,6 @@ onMounted(() => {
           latestReturn: obj.returnDate,
         };
       });
-      console.log(result.value);
       if (data.length == 0) {
         resultMessage.value = "No issued books.";
       }
@@ -227,7 +223,6 @@ const refreshPage = () => {
           latestReturn: obj.returnDate,
         };
       });
-      console.log(result.value);
     })
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);

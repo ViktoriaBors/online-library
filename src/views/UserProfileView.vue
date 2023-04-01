@@ -166,7 +166,6 @@ const updateUser = () => {
   };
   fetch("https://fromlabtoweb.hu/api/user/updateUser", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

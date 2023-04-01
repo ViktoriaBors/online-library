@@ -88,7 +88,6 @@ onMounted(() => {
 
 let bookReturn = ($event) => {
   resultMessage.value = undefined;
-  console.log($event.target.dataset.issueid);
   resultMessage.value = undefined;
   const issueId = $event.target.dataset.issueid;
   const body = {
@@ -96,7 +95,6 @@ let bookReturn = ($event) => {
   };
   fetch("https://fromlabtoweb.hu/api/user/returnBook", {
     method: "POST",
-    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
