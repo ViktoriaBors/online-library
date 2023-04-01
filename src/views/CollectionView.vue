@@ -75,7 +75,10 @@ let categories = ref([]);
 let languages = ref([]);
 
 onMounted(() => {
-  fetch("http://localhost/api/categories")
+  fetch("http://library.fromlabtoweblibrary.nhely.hu/api/categories", {
+    method: "GET",
+    mode: "no-cors",
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -91,8 +94,12 @@ onMounted(() => {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://localhost/api/languages")
+  fetch("http://library.fromlabtoweblibrary.nhely.hu/api/languages", {
+    method: "GET",
+    mode: "no-cors",
+  })
     .then((response) => {
+      console.log(response);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -111,13 +118,16 @@ onMounted(() => {
 
 const searchBook = () => {
   fetch(
-    "http://localhost/api/collection?category=" +
+    "http://library.fromlabtoweblibrary.nhely.hu/api/collection?category=" +
       chosenCategory.value +
       "&language=" +
       chosenLanguage.value +
       "&search=" +
       search.value,
-    {}
+    {
+      method: "GET",
+      mode: "no-cors",
+    }
   )
     .then((response) => {
       if (!response.ok) {
