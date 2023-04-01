@@ -75,14 +75,10 @@ let categories = ref([]);
 let languages = ref([]);
 
 onMounted(() => {
-  fetch("http://library.fromlabtoweblibrary.nhely.hu/api/categories", {
+  fetch("https://fromlabtoweb.hu/api/categories", {
     method: "GET",
-    mode: "no-cors",
   })
     .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
       return response.json();
     })
     .then((data) => {
@@ -90,13 +86,9 @@ onMounted(() => {
         return { value: category.categoryId, label: category.categoryName };
       });
       categories.value.unshift({ value: "undefined", label: "-" });
-    })
-    .catch((error) => {
-      console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://library.fromlabtoweblibrary.nhely.hu/api/languages", {
+  fetch("https://fromlabtoweb.hu/api/languages", {
     method: "GET",
-    mode: "no-cors",
   })
     .then((response) => {
       console.log(response);
@@ -118,7 +110,7 @@ onMounted(() => {
 
 const searchBook = () => {
   fetch(
-    "http://library.fromlabtoweblibrary.nhely.hu/api/collection?category=" +
+    "https://fromlabtoweb.hu/api/collection?category=" +
       chosenCategory.value +
       "&language=" +
       chosenLanguage.value +
@@ -126,7 +118,6 @@ const searchBook = () => {
       search.value,
     {
       method: "GET",
-      mode: "no-cors",
     }
   )
     .then((response) => {

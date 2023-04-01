@@ -280,10 +280,8 @@ const registerNewUser = () => {
       address: postalCode.value + " " + city.value + " " + address.value,
     };
 
-    fetch("http://localhost/api/register", {
+    fetch("https://fromlabtoweb.hu/api/register", {
       method: "POST",
-      cors: "no-cors",
-      // credentials:"include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -326,10 +324,8 @@ const loginUser = () => {
       email: loginEmail.value,
       password: loginPassword.value,
     };
-    fetch("http://localhost/api/loginUser", {
+    fetch("https://fromlabtoweb.hu/api/loginUser", {
       method: "POST",
-      cors: "no-cors",
-      // credentials:"include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -372,10 +368,8 @@ const sendActivationCode = () => {
       email: loginEmail.value,
       activationCode: activationCode.value,
     };
-    fetch("http://localhost/api/activateUser", {
+    fetch("https://fromlabtoweb.hu/api/activateUser", {
       method: "POST",
-      cors: "no-cors",
-      // credentials:"include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -417,10 +411,9 @@ const forgotPassword = () => {
     const body = {
       email: loginEmail.value,
     };
-    fetch("http://localhost/api/forgotPassword", {
+    fetch("https://fromlabtoweb.hu/api/forgotPassword", {
       method: "POST",
-      cors: "no-cors",
-      // credentials:"include",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -465,10 +458,8 @@ const updatePassword = () => {
       password: newPassword1.value,
       code: activationCode.value,
     };
-    fetch("http://localhost/api/updatePassword", {
+    fetch("https://fromlabtoweb.hu/api/updatePassword", {
       method: "POST",
-      cors: "no-cors",
-      // credentials:"include",
       headers: {
         "Content-Type": "application/json",
       },

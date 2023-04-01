@@ -111,7 +111,7 @@ onMounted(() => {
   const user = localStorage.getItem("user");
   const userParse = JSON.parse(user);
   const userId = userParse.sub;
-  fetch("http://localhost/api/getUser/" + userId, {
+  fetch("https://fromlabtoweb.hu/api/getUser/" + userId, {
     method: "GET",
   })
     .then((response) => {
@@ -130,7 +130,7 @@ onMounted(() => {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://localhost/api/categories")
+  fetch("https://fromlabtoweb.hu/api/categories")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -146,7 +146,7 @@ onMounted(() => {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://localhost/api/languages")
+  fetch("https://fromlabtoweb.hu/api/languages")
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -166,7 +166,7 @@ onMounted(() => {
 
 const searchBook = () => {
   fetch(
-    "http://localhost/api/collection?category=" +
+    "https://fromlabtoweb.hu/api/collection?category=" +
       chosenCategory.value +
       "&language=" +
       chosenLanguage.value +
@@ -214,10 +214,9 @@ let bookRequest = ($event) => {
     userId: userId,
     bookId: Number(bookId),
   };
-  fetch("http://localhost/api/user/issueBook", {
+  fetch("https://fromlabtoweb.hu/api/user/issueBook", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

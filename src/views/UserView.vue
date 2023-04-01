@@ -71,7 +71,7 @@ onMounted(() => {
   const user = localStorage.getItem("user");
   const userParse = JSON.parse(user);
   const userId = userParse.sub;
-  fetch("http://localhost/api/user/userHistory?userId=" + userId, {})
+  fetch("https://fromlabtoweb.hu/api/user/userHistory?userId=" + userId, {})
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -94,10 +94,9 @@ let bookReturn = ($event) => {
   const body = {
     issueId: Number(issueId),
   };
-  fetch("http://localhost/api/user/returnBook", {
+  fetch("https://fromlabtoweb.hu/api/user/returnBook", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

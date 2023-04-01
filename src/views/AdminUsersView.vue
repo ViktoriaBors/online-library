@@ -135,10 +135,9 @@ const changeUserBanStatus = (id) => {
     userId,
     isBanned: status,
   };
-  fetch("http://localhost/api/admin/userBanStatus", {
+  fetch("https://fromlabtoweb.hu/api/admin/userBanStatus", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -171,10 +170,9 @@ const changeUserApproveStatus = (id) => {
     userId,
     isApproved: status,
   };
-  fetch("http://localhost/api/admin/userApproveStatus", {
+  fetch("https://fromlabtoweb.hu/api/admin/userApproveStatus", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -203,10 +201,9 @@ const deleteUser = (id) => {
   const body = {
     userId,
   };
-  fetch("http://localhost/api/admin/deleteUser", {
+  fetch("https://fromlabtoweb.hu/api/admin/deleteUser", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -232,7 +229,7 @@ const deleteUser = (id) => {
 
 const editUserRole = (id) => {
   userToChangeId.value = id;
-  fetch("http://localhost/api/getUser/" + id, {
+  fetch("https://fromlabtoweb.hu/api/getUser/" + id, {
     method: "GET",
   })
     .then((response) => {
@@ -256,10 +253,9 @@ const changeUserRole = () => {
     userId,
     role,
   };
-  fetch("http://localhost/api/admin/changeUserRole", {
+  fetch("https://fromlabtoweb.hu/api/admin/changeUserRole", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -311,10 +307,9 @@ const addNewBook = () => {
     availability: copies.value,
     description: description.value,
   };
-  fetch("http://localhost/api/admin/newBook", {
+  fetch("https://fromlabtoweb.hu/api/admin/newBook", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -339,7 +334,7 @@ const addNewBook = () => {
 };
 
 onMounted(() => {
-  fetch("http://localhost/api/admin/users", {
+  fetch("https://fromlabtoweb.hu/api/admin/users", {
     method: "GET",
   })
     .then((response) => {
@@ -368,7 +363,7 @@ onMounted(() => {
 const refreshPage = () => {
   resultMessage.value = undefined;
   updateUser.value = undefined;
-  fetch("http://localhost/api/admin/users", {
+  fetch("https://fromlabtoweb.hu/api/admin/users", {
     method: "GET",
   })
     .then((response) => {

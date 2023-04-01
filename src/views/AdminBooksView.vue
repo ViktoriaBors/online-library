@@ -239,10 +239,9 @@ const changeBookStatus = (id) => {
     bookId,
     isActive: status.isActive,
   };
-  fetch("http://localhost/api/admin/bookStatus", {
+  fetch("https://fromlabtoweb.hu/api/admin/bookStatus", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -268,7 +267,7 @@ const changeBookStatus = (id) => {
 
 const editBook = (id) => {
   bookToChangeId.value = id;
-  fetch("http://localhost/api/book/" + id, {
+  fetch("https://fromlabtoweb.hu/api/book/" + id, {
     method: "GET",
   })
     .then((response) => {
@@ -312,10 +311,9 @@ const changeBookDetails = () => {
     category: category.value,
     availability: copies.value,
   };
-  fetch("http://localhost/api/admin/book", {
+  fetch("https://fromlabtoweb.hu/api/admin/book", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -368,10 +366,9 @@ const addNewBook = () => {
     availability: copies.value,
     description: description.value,
   };
-  fetch("http://localhost/api/admin/newBook", {
+  fetch("https://fromlabtoweb.hu/api/admin/newBook", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -396,7 +393,7 @@ const addNewBook = () => {
 };
 
 onMounted(() => {
-  fetch("http://localhost/api/books", {
+  fetch("https://fromlabtoweb.hu/api/books", {
     method: "GET",
   })
     .then((response) => {
@@ -421,7 +418,7 @@ onMounted(() => {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://localhost/api/categories", {
+  fetch("https://fromlabtoweb.hu/api/categories", {
     method: "GET",
   })
     .then((response) => {
@@ -438,7 +435,7 @@ onMounted(() => {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://localhost/api/languages", {
+  fetch("https://fromlabtoweb.hu/api/languages", {
     method: "GET",
   })
     .then((response) => {
@@ -455,7 +452,7 @@ onMounted(() => {
     .catch((error) => {
       console.error("There was a problem with the fetch operation:", error);
     });
-  fetch("http://localhost/api/authors", {
+  fetch("https://fromlabtoweb.hu/api/authors", {
     method: "GET",
   })
     .then((response) => {
@@ -483,7 +480,7 @@ const refreshPage = () => {
   copies.value = undefined;
   updateBook.value = undefined;
   description.value = undefined;
-  fetch("http://localhost/api/books", {
+  fetch("https://fromlabtoweb.hu/api/books", {
     method: "GET",
   })
     .then((response) => {

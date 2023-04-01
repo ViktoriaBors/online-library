@@ -108,10 +108,9 @@ const returnBook = (id, user) => {
     name: user,
     title,
   };
-  fetch("http://localhost/api/admin/returnBook", {
+  fetch("https://fromlabtoweb.hu/api/admin/returnBook", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -144,10 +143,9 @@ const paidFine = (id, user) => {
     name: user,
     finePaid,
   };
-  fetch("http://localhost/api/admin/paidFine", {
+  fetch("https://fromlabtoweb.hu/api/admin/paidFine", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -173,7 +171,7 @@ const paidFine = (id, user) => {
 };
 
 onMounted(() => {
-  fetch("http://localhost/api/admin/issuedbooks", {
+  fetch("https://fromlabtoweb.hu/api/admin/issuedbooks", {
     method: "GET",
   })
     .then((response) => {
@@ -207,7 +205,7 @@ onMounted(() => {
 
 const refreshPage = () => {
   resultMessage.value = undefined;
-  fetch("http://localhost/api/admin/issuedbooks", {
+  fetch("https://fromlabtoweb.hu/api/admin/issuedbooks", {
     method: "GET",
   })
     .then((response) => {

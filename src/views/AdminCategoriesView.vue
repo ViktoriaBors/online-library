@@ -133,10 +133,9 @@ const changeCategoryStatus = (id) => {
     categoryId,
     isActive: status.isActive,
   };
-  fetch("http://localhost/api/admin/categoryStatus", {
+  fetch("https://fromlabtoweb.hu/api/admin/categoryStatus", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -162,7 +161,7 @@ const changeCategoryStatus = (id) => {
 
 const editCategoryName = (id) => {
   categoryToChangeId.value = id;
-  fetch("http://localhost/api/category/" + id, {
+  fetch("https://fromlabtoweb.hu/api/category/" + id, {
     method: "GET",
   })
     .then((response) => {
@@ -191,10 +190,9 @@ const changeCategoryName = () => {
     categoryId,
     categoryName: updateCategoryName.value,
   };
-  fetch("http://localhost/api/admin/categoryName", {
+  fetch("https://fromlabtoweb.hu/api/admin/categoryName", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -226,10 +224,9 @@ const addNewCategory = () => {
   const body = {
     categoryName: newCategoryName.value,
   };
-  fetch("http://localhost/api/admin/newCategory", {
+  fetch("https://fromlabtoweb.hu/api/admin/newCategory", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -254,7 +251,7 @@ const addNewCategory = () => {
 };
 
 onMounted(() => {
-  fetch("http://localhost/api/categories", {
+  fetch("https://fromlabtoweb.hu/api/categories", {
     method: "GET",
   })
     .then((response) => {
@@ -281,7 +278,7 @@ const refreshPage = () => {
   resultMessage.value = undefined;
   newCategoryName.value = undefined;
   updateCategoryName.value = undefined;
-  fetch("http://localhost/api/categories", {
+  fetch("https://fromlabtoweb.hu/api/categories", {
     method: "GET",
   })
     .then((response) => {

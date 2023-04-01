@@ -129,9 +129,8 @@ const changeAuthorStatus = (id) => {
     authorId,
     isActive: status.isActive,
   };
-  fetch("http://localhost/api/admin/authorStatus", {
+  fetch("https://fromlabtoweb.hu/api/admin/authorStatus", {
     method: "POST",
-    cors: "no-cors",
     // credentials:"include",
     headers: {
       "Content-Type": "application/json",
@@ -158,7 +157,7 @@ const changeAuthorStatus = (id) => {
 
 const editAuthorName = (id) => {
   authorToChangeId.value = id;
-  fetch("http://localhost/api/author/" + id, {
+  fetch("https://fromlabtoweb.hu/api/author/" + id, {
     method: "GET",
   })
     .then((response) => {
@@ -187,9 +186,8 @@ const changeAuthorName = () => {
     authorId,
     authorName: updateAuthorName.value,
   };
-  fetch("http://localhost/api/admin/authorName", {
+  fetch("https://fromlabtoweb.hu/api/admin/authorName", {
     method: "POST",
-    cors: "no-cors",
     // credentials:"include",
     headers: {
       "Content-Type": "application/json",
@@ -222,10 +220,9 @@ const addNewAuthor = () => {
   const body = {
     authorName: newAuthorName.value,
   };
-  fetch("http://localhost/api/admin/newAuthor", {
+  fetch("https://fromlabtoweb.hu/api/admin/newAuthor", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -250,7 +247,7 @@ const addNewAuthor = () => {
 };
 
 onMounted(() => {
-  fetch("http://localhost/api/authors", {
+  fetch("https://fromlabtoweb.hu/api/authors", {
     method: "GET",
   })
     .then((response) => {
@@ -277,7 +274,7 @@ const refreshPage = () => {
   resultMessage.value = undefined;
   newAuthorName.value = undefined;
   updateAuthorName.value = undefined;
-  fetch("http://localhost/api/authors", {
+  fetch("https://fromlabtoweb.hu/api/authors", {
     method: "GET",
   })
     .then((response) => {

@@ -92,10 +92,9 @@ const loginAdmin = () => {
     email: loginAdminEmail.value,
     password: loginAdminPassword.value,
   };
-  fetch("http://localhost/api/loginAdmin", {
+  fetch("https://fromlabtoweb.hu/api/loginAdmin", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

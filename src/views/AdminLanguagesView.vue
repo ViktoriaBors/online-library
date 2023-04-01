@@ -131,10 +131,9 @@ const changeLanguageStatus = (id) => {
     langId,
     isActive: status.isActive,
   };
-  fetch("http://localhost/api/admin/languageStatus", {
+  fetch("https://fromlabtoweb.hu/api/admin/languageStatus", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -160,7 +159,7 @@ const changeLanguageStatus = (id) => {
 
 const editLanguage = (id) => {
   languageToChangeId.value = id;
-  fetch("http://localhost/api/language/" + id, {
+  fetch("https://fromlabtoweb.hu/api/language/" + id, {
     method: "GET",
   })
     .then((response) => {
@@ -189,10 +188,9 @@ const changeLanguage = () => {
     langId,
     language: updateLanguage.value,
   };
-  fetch("http://localhost/api/admin/language", {
+  fetch("https://fromlabtoweb.hu/api/admin/language", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -225,10 +223,9 @@ const addNewLanguage = () => {
   const body = {
     language: newLanguage.value,
   };
-  fetch("http://localhost/api/admin/newLanguage", {
+  fetch("https://fromlabtoweb.hu/api/admin/newLanguage", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -253,7 +250,7 @@ const addNewLanguage = () => {
 };
 
 onMounted(() => {
-  fetch("http://localhost/api/languages", {
+  fetch("https://fromlabtoweb.hu/api/languages", {
     method: "GET",
   })
     .then((response) => {
@@ -280,7 +277,7 @@ const refreshPage = () => {
   resultMessage.value = undefined;
   newLanguage.value = undefined;
   updateLanguage.value = undefined;
-  fetch("http://localhost/api/languages", {
+  fetch("https://fromlabtoweb.hu/api/languages", {
     method: "GET",
   })
     .then((response) => {

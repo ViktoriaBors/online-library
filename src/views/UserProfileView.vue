@@ -123,7 +123,7 @@ onMounted(() => {
   const user = localStorage.getItem("user");
   const userParse = JSON.parse(user);
   const userId = userParse.sub;
-  fetch("http://localhost/api/getUser/" + userId, {
+  fetch("https://fromlabtoweb.hu/api/getUser/" + userId, {
     method: "GET",
   })
     .then((response) => {
@@ -164,10 +164,9 @@ const updateUser = () => {
     name: firstName.value + " " + lastName.value,
     address: postalCode.value + " " + city.value + " " + address.value,
   };
-  fetch("http://localhost/api/user/updateUser", {
+  fetch("https://fromlabtoweb.hu/api/user/updateUser", {
     method: "POST",
-    cors: "no-cors",
-    // credentials:"include",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
